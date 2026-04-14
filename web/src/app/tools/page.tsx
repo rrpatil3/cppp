@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Business, BalanceSheetItem } from '@/lib/types';
@@ -23,7 +23,7 @@ const TOOLS = [
   { key: 'coverage', label: 'Interest Coverage' },
 ];
 
-export default function ToolsPage() {
+function ToolsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const supabase = createClient();
@@ -376,5 +376,13 @@ export default function ToolsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ToolsPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem' }}>Loading...</div>}>
+      <ToolsContent />
+    </Suspense>
   );
 }

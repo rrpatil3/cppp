@@ -3,6 +3,8 @@ import './globals.css';
 import Nav from '@/components/Nav';
 import ScrollReveal from '@/components/ScrollReveal';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'CapTable AI — Goldman Sachs for Main Street',
   description: 'AI-powered financial intelligence platform for small business owners preparing for exit, seeking capital, or monitoring financial health.',
