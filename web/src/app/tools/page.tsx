@@ -6,9 +6,9 @@ import { createClient } from '@/lib/supabase/client';
 import type { Business, BalanceSheetItem } from '@/lib/types';
 import {
   computeSDE, calculateAfterTaxProceeds, detectRedFlags, modelScenario,
-  getIndustryBenchmark, getMarginPercentile, formatCurrency, formatCompact,
+  formatCurrency, formatCompact,
 } from '@/lib/calculator';
-import { getIndustryBenchmark as getBenchmark, COMPARABLE_TRANSACTIONS } from '@/lib/benchmarks';
+import { getIndustryBenchmark as getBenchmark, getMarginPercentile, COMPARABLE_TRANSACTIONS } from '@/lib/benchmarks';
 import { marked } from 'marked';
 
 const TOOLS = [

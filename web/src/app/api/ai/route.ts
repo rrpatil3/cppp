@@ -109,7 +109,8 @@ export async function POST(request: NextRequest) {
           type: 'text',
           text: systemPrompt,
           cache_control: { type: 'ephemeral' },
-        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any,
       ],
       messages,
     });
