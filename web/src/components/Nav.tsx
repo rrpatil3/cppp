@@ -2,79 +2,29 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import ThemeToggle from './ThemeToggle';
+import { motion } from 'framer-motion';
+import {
+  LayoutDashboard,
+  MessageSquare,
+  Wrench,
+  TrendingUp,
+  DollarSign,
+  Users,
+  Settings,
+} from 'lucide-react';
 
 interface NavProps {
   mobile?: boolean;
 }
 
 const NAV_ITEMS = [
-  {
-    label: 'Dashboard',
-    route: '/',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
-      </svg>
-    ),
-  },
-  {
-    label: 'AI Advisor',
-    route: '/advisor',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Tools',
-    route: '/tools',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-      </svg>
-    ),
-  },
-  {
-    label: 'M&A Suite',
-    route: '/ma',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Balance Sheet',
-    route: '/balance-sheet',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Cap Table',
-    route: '/ownership',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Settings',
-    route: '/settings',
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="3" />
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-      </svg>
-    ),
-  },
+  { label: 'Dashboard',     route: '/',             icon: LayoutDashboard },
+  { label: 'AI Advisor',    route: '/advisor',       icon: MessageSquare },
+  { label: 'Tools',         route: '/tools',         icon: Wrench },
+  { label: 'M&A Suite',     route: '/ma',            icon: TrendingUp },
+  { label: 'Balance Sheet', route: '/balance-sheet', icon: DollarSign },
+  { label: 'Cap Table',     route: '/ownership',     icon: Users },
+  { label: 'Settings',      route: '/settings',      icon: Settings },
 ];
 
 export default function Nav({ mobile = false }: NavProps) {
@@ -84,7 +34,7 @@ export default function Nav({ mobile = false }: NavProps) {
     return (
       <nav
         style={{
-          background: 'var(--bg-surface)',
+          background: 'var(--bg-base)',
           borderTop: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
@@ -94,6 +44,7 @@ export default function Nav({ mobile = false }: NavProps) {
       >
         {NAV_ITEMS.slice(0, 5).map((item) => {
           const active = pathname === item.route;
+          const Icon = item.icon;
           return (
             <Link
               key={item.route}
@@ -113,7 +64,7 @@ export default function Nav({ mobile = false }: NavProps) {
                 minWidth: 44,
               }}
             >
-              {item.icon}
+              <Icon size={18} />
               {item.label}
             </Link>
           );
@@ -126,7 +77,7 @@ export default function Nav({ mobile = false }: NavProps) {
     <nav
       style={{
         width: 'var(--sidebar-width)',
-        background: 'var(--bg-surface)',
+        background: 'var(--bg-base)',
         borderRight: '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
@@ -135,76 +86,162 @@ export default function Nav({ mobile = false }: NavProps) {
       }}
     >
       {/* Logo */}
-      <div style={{ padding: '1.25rem 1rem 1rem', borderBottom: '1px solid var(--border-subtle)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+      <div
+        style={{
+          height: 80,
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 2rem',
+          borderBottom: '1px solid var(--border)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <div
             style={{
-              width: 40,
-              height: 40,
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
               background: 'var(--green)',
-              borderRadius: '0.5rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontWeight: 800,
-              fontSize: '0.875rem',
-              color: '#000',
+              boxShadow: '0 0 20px rgba(0,229,153,0.3)',
               flexShrink: 0,
             }}
           >
-            CT
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M4 14L10 2L20 14" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M14 22L8 10L12 10" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>CapTable</div>
+            <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>CapTable</div>
             <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>Financial AI</div>
           </div>
         </div>
       </div>
 
+      {/* Nav section label */}
+      <div style={{ padding: '1.5rem 1rem 0.5rem 1.5rem' }}>
+        <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>
+          Main / Dashboard
+        </span>
+      </div>
+
       {/* Nav items */}
-      <div style={{ flex: 1, padding: '0.75rem 0.5rem', display: 'flex', flexDirection: 'column', gap: '0.125rem' }}>
+      <div style={{ flex: 1, padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.route;
+          const Icon = item.icon;
+
           return (
             <Link
               key={item.route}
               href={item.route}
               style={{
+                position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.625rem',
-                padding: '0.5rem 0.75rem',
-                borderRadius: '0.5rem',
-                color: active ? 'var(--green)' : 'var(--text-secondary)',
-                background: active ? 'var(--green-dim)' : 'transparent',
-                borderLeft: active ? '3px solid var(--green)' : '3px solid transparent',
+                gap: '0.75rem',
+                padding: '0.75rem 1rem',
+                borderRadius: '0.75rem',
+                color: active ? '#ffffff' : 'var(--text-secondary)',
                 textDecoration: 'none',
                 fontSize: '0.875rem',
-                fontWeight: active ? 600 : 400,
-                transition: 'background 0.15s ease, color 0.15s ease',
+                fontWeight: active ? 500 : 400,
+                transition: 'color 0.2s ease',
+                zIndex: 0,
               }}
+              className="nav-item-link"
             >
-              {item.icon}
-              {item.label}
+              {active && (
+                <motion.div
+                  layoutId="activeNavIndicator"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    borderRadius: '0.75rem',
+                    background: 'var(--bg-elevated)',
+                    border: '1px solid var(--border)',
+                    zIndex: -1,
+                  }}
+                  transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
+                />
+              )}
+              <Icon
+                size={17}
+                strokeWidth={active ? 2.5 : 2}
+                style={{ color: active ? 'var(--green)' : 'inherit', flexShrink: 0 }}
+              />
+              <span>{item.label}</span>
+              {item.label === 'M&A Suite' && (
+                <span
+                  style={{
+                    marginLeft: 'auto',
+                    fontSize: '0.6rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    background: 'var(--bg-overlay)',
+                    color: 'var(--text-secondary)',
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: 9999,
+                  }}
+                >
+                  New
+                </span>
+              )}
             </Link>
           );
         })}
       </div>
 
-      {/* Footer */}
-      <div
-        style={{
-          padding: '0.75rem 1rem',
-          borderTop: '1px solid var(--border-subtle)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', lineHeight: 1.4 }}>
-          CapTable AI<br />Financial Intelligence
+      {/* Footer card */}
+      <div style={{ padding: '1.5rem 1rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0',
+            padding: '1rem',
+            borderRadius: '1rem',
+            background: 'var(--bg-surface)',
+            border: '1px solid var(--border)',
+            position: 'relative',
+            overflow: 'hidden',
+            cursor: 'pointer',
+          }}
+          className="footer-card-hover"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: '50%',
+                background: 'var(--bg-overlay)',
+                border: '2px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: 'var(--green)',
+                flexShrink: 0,
+              }}
+            >
+              AI
+            </div>
+            <div style={{ overflow: 'hidden' }}>
+              <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                Unlock AI Features
+              </p>
+              <p style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                Your financial assistant
+              </p>
+            </div>
+          </div>
         </div>
-        <ThemeToggle />
       </div>
     </nav>
   );

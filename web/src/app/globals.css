@@ -4,39 +4,39 @@
 
 :root {
   /* Backgrounds */
-  --bg-base:     #0e0e0e;
-  --bg-surface:  #161616;
-  --bg-elevated: #1e1e1e;
-  --bg-overlay:  #252525;
+  --bg-base:     #0A0A0A;
+  --bg-surface:  #111111;
+  --bg-elevated: #161616;
+  --bg-overlay:  #1E1E1E;
 
   /* Brand colors */
-  --green:        #00C805;
-  --green-muted:  #00a004;
-  --green-dim:    rgba(0,200,5,0.08);
-  --green-border: rgba(0,200,5,0.18);
+  --green:        #00E599;
+  --green-muted:  #00CC88;
+  --green-dim:    rgba(0,229,153,0.08);
+  --green-border: rgba(0,229,153,0.20);
 
-  --red:        #ff5000;
-  --red-dim:    rgba(255,80,0,0.08);
-  --red-border: rgba(255,80,0,0.18);
+  --red:        #ff4444;
+  --red-dim:    rgba(255,68,68,0.08);
+  --red-border: rgba(255,68,68,0.20);
 
-  --gold:        #e5a100;
-  --gold-dim:    rgba(229,161,0,0.10);
-  --gold-border: rgba(229,161,0,0.20);
+  --gold:        #f59e0b;
+  --gold-dim:    rgba(245,158,11,0.10);
+  --gold-border: rgba(245,158,11,0.20);
 
   /* Text */
   --text-primary:   #ffffff;
-  --text-secondary: #9b9b9b;
-  --text-tertiary:  #5e5e5e;
+  --text-secondary: #888888;
+  --text-tertiary:  #555555;
   --text-on-green:  #000000;
 
   /* Borders */
-  --border:        rgba(255,255,255,0.10);
-  --border-subtle: rgba(255,255,255,0.06);
-  --border-strong: rgba(255,255,255,0.18);
-  --focus-ring:    rgba(0,200,5,0.35);
+  --border:        #222222;
+  --border-subtle: #1A1A1A;
+  --border-strong: #333333;
+  --focus-ring:    rgba(0,229,153,0.25);
 
   /* Layout */
-  --sidebar-width: 220px;
+  --sidebar-width: 280px;
 
   /* Typography */
   --font-display: 'Inter', sans-serif;
@@ -66,8 +66,8 @@ body {
   .card {
     background: var(--bg-surface);
     border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 1.25rem;
+    border-radius: 1rem;
+    padding: 1.5rem;
   }
 
   .card-inner {
@@ -81,12 +81,12 @@ body {
     background: var(--green);
     color: var(--text-on-green);
     border: none;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    padding: 0.6rem 1.5rem;
     font-weight: 600;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: background 0.15s ease, opacity 0.15s ease;
+    transition: background 0.2s ease, opacity 0.15s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -95,27 +95,27 @@ body {
   .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .btn-secondary {
-    background: var(--bg-elevated);
+    background: var(--bg-surface);
     color: var(--text-primary);
     border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    padding: 0.6rem 1.5rem;
     font-weight: 500;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: background 0.15s ease;
+    transition: background 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
   }
-  .btn-secondary:hover { background: var(--bg-overlay); }
+  .btn-secondary:hover { background: var(--bg-elevated); }
   .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 
   .btn-ghost {
     background: transparent;
     color: var(--text-secondary);
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
     cursor: pointer;
@@ -130,12 +130,12 @@ body {
     background: var(--bg-elevated);
     color: var(--red);
     border: 1px solid var(--red-border);
-    border-radius: 0.5rem;
-    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    padding: 0.6rem 1.5rem;
     font-weight: 500;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: background 0.15s ease;
+    transition: background 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
@@ -143,19 +143,19 @@ body {
   .btn-danger:hover { background: var(--red-dim); }
 
   .input {
-    background: var(--bg-elevated);
+    background: var(--bg-base);
     border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
+    padding: 0.625rem 0.875rem;
     color: var(--text-primary);
     font-size: 0.875rem;
     outline: none;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     width: 100%;
   }
   .input:focus {
     border-color: var(--green);
-    box-shadow: 0 0 0 3px var(--focus-ring);
+    box-shadow: 0 0 0 2px var(--focus-ring);
   }
   .input::placeholder { color: var(--text-tertiary); }
 
@@ -347,7 +347,7 @@ body {
     left: 40%;
     width: 60vw;
     height: 60vw;
-    background: radial-gradient(ellipse, rgba(0,200,5,0.04) 0%, transparent 70%);
+    background: radial-gradient(ellipse, rgba(0,229,153,0.05) 0%, transparent 70%);
     pointer-events: none;
     z-index: 0;
     animation: drift 12s ease-in-out infinite alternate;
@@ -425,4 +425,66 @@ body {
   }
   .quick-action-link:last-child { border-bottom: none; }
   .quick-action-link:hover { background: var(--bg-elevated); padding-left: 0.5rem; }
+
+  /* Nav item hover (sidebar) */
+  .nav-item-link:hover {
+    color: #ffffff !important;
+    background: var(--bg-surface);
+    border-radius: 0.75rem;
+  }
+
+  /* Footer card hover */
+  .footer-card-hover:hover {
+    border-color: var(--green-border) !important;
+  }
+
+  /* Header icon button hover */
+  .header-icon-btn:hover {
+    color: var(--text-primary) !important;
+  }
+
+  /* Header search input focus */
+  .header-search-input:focus {
+    border-color: var(--border-strong) !important;
+    outline: none;
+  }
+  .header-search-input::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  /* Page content padding standard */
+  .page-content {
+    padding: 2rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+
+  /* Section subtitle */
+  .section-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin-top: 0.375rem;
+  }
+
+  /* Table row hover */
+  .table-row-hover:hover {
+    background: var(--bg-surface);
+  }
+  .table-row-hover:hover .delete-btn {
+    opacity: 1 !important;
+  }
+  .delete-btn:hover {
+    color: var(--red) !important;
+    background: var(--red-dim) !important;
+  }
 }
