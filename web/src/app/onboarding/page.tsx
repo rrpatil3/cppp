@@ -69,15 +69,15 @@ export default function OnboardingPage() {
       <div className="card" style={{ width: '100%', maxWidth: 520 }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-            <div style={{ padding: '0.3rem 0.75rem', background: 'var(--green-dim)', borderRadius: 9999, fontSize: '0.65rem', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>SBA Lender Tool</div>
+            <div style={{ padding: '0.3rem 0.75rem', background: 'var(--green-dim)', borderRadius: 9999, fontSize: '0.65rem', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>SBA 7(a) Underwriting</div>
           </div>
-          <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.375rem' }}>Add a Borrower for Analysis</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Enter the borrower&apos;s financial data from their loan application or load a demo SBA borrower profile.</p>
+          <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.375rem' }}>Add a Borrower Application</h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Enter the borrower&apos;s financial data from their SBA 7(a) application. Spreading from uploaded docs coming Q2. Load a demo SBA borrower to see the platform in action.</p>
         </div>
 
         {/* Demo data buttons */}
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', alignSelf: 'center' }}>Demo SBA borrowers:</span>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', alignSelf: 'center' }}>Load demo SBA borrower:</span>
           {(Object.keys(DEMO_DATA) as (keyof typeof DEMO_DATA)[]).map(key => (
             <button key={key} onClick={() => loadDemo(key)} className="btn-secondary" style={{ fontSize: '0.75rem', padding: '0.3rem 0.75rem' }}>
               {DEMO_DATA[key].business_name}
@@ -124,8 +124,11 @@ export default function OnboardingPage() {
           )}
 
           <button className="btn-primary" type="submit" disabled={loading} style={{ marginTop: '1.25rem', width: '100%', justifyContent: 'center', padding: '0.625rem' }}>
-            {loading ? 'Saving...' : 'Launch Dashboard'}
+            {loading ? 'Saving...' : 'Start Underwriting Analysis'}
           </button>
+          <p style={{ marginTop: '0.75rem', fontSize: '0.7rem', color: 'var(--text-tertiary)', textAlign: 'center' }}>
+            All analysis is for loan officer review only · Not a credit decision tool
+          </p>
         </form>
       </div>
     </div>

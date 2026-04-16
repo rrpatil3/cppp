@@ -24,14 +24,6 @@ interface PageData {
   recentAdvice: string | null;
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  pipeline: 'var(--text-tertiary)',
-  'in-review': 'var(--gold)',
-  approved: 'var(--green)',
-  declined: 'var(--red)',
-  'on-hold': '#f97316',
-};
-
 export default function PipelineDashboard() {
   const router = useRouter();
   const [data, setData] = useState<PageData | null>(null);
@@ -102,6 +94,43 @@ export default function PipelineDashboard() {
   return (
     <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
 
+      {/* Value prop banner */}
+      <div
+        style={{
+          marginBottom: '1.25rem',
+          padding: '1rem 1.25rem',
+          borderRadius: '1rem',
+          background: 'linear-gradient(135deg, rgba(0,229,153,0.06) 0%, rgba(0,229,153,0.02) 100%)',
+          border: '1px solid rgba(0,229,153,0.15)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
+        }}
+      >
+        <div>
+          <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
+            SBA 7(a) Underwriting · AI Financial Intelligence for Preferred Lender Programs
+          </div>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+            Reduces 4–8 hours of manual analyst work to under 30 minutes per application · Analytical support only — not a credit decision tool
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '1.5rem', flexShrink: 0 }}>
+          {[
+            { label: 'SBA 7(a) Loans (FY2023)', value: '57,362' },
+            { label: 'Hours Saved / Application', value: '~5 hrs' },
+            { label: 'Target PLPs', value: '140' },
+          ].map(s => (
+            <div key={s.label} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.1rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--green)' }}>{s.value}</div>
+              <div style={{ fontSize: '0.6rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Page header */}
       <div style={{ marginBottom: '1.25rem' }}>
         <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
@@ -132,7 +161,7 @@ export default function PipelineDashboard() {
       <div className="card reveal d0" style={{ marginBottom: '1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
           <div>
-            <div style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.25rem' }}>Active Application</div>
+            <div style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.25rem' }}>Active SBA 7(a) Application</div>
             <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{b.business.business_name}</div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{b.business.industry || 'Industry not specified'} · {b.business.employees} employees</div>
           </div>
@@ -140,7 +169,7 @@ export default function PipelineDashboard() {
             <span className={`badge ${b.healthScore >= 70 ? 'badge-green' : b.healthScore >= 45 ? 'badge-yellow' : 'badge-red'}`}>
               {b.healthLabel} · {b.healthScore}/100
             </span>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', marginTop: '0.375rem' }}>SBA Health Score</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', marginTop: '0.375rem' }}>SBA Financial Health Score</div>
           </div>
         </div>
 
@@ -182,30 +211,59 @@ export default function PipelineDashboard() {
         </div>
       )}
 
-      {/* Quick Actions — loan officer workflow */}
+      {/* Loan officer workflow */}
       <div className="card reveal d2" style={{ marginBottom: '1rem' }}>
-        <div className="stripe-row-title" style={{ marginBottom: '0.75rem' }}>Loan Officer Workflow</div>
+        <div style={{ marginBottom: '0.75rem' }}>
+          <div className="stripe-row-title">Loan Officer Workflow</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', marginTop: '0.2rem' }}>
+            Complete a full SBA 7(a) underwriting analysis in under 30 minutes
+          </div>
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
           {[
-            { label: 'Run DSCR Analysis', sub: 'Global cash flow · SBA ratios', href: '/underwriting' },
-            { label: 'Generate Credit Memo', sub: 'AI-drafted credit memo', href: '/credit-memo' },
-            { label: 'Due Diligence Checklist', sub: '12-category DD assessment', href: '/tools' },
-            { label: 'Ask AI Underwriter', sub: 'Structured Q&A on this borrower', href: '/advisor' },
+            { label: 'Run DSCR & SBA Ratios', sub: 'Global cash flow · Leverage · Collateral valuation', href: '/underwriting', step: '1' },
+            { label: 'Generate Credit Memo', sub: 'AI-drafted SBA 7(a) credit memo for loan officer review', href: '/credit-memo', step: '2' },
+            { label: 'Due Diligence Checklist', sub: '12-category DD assessment · Business valuation · Red flags', href: '/tools', step: '3' },
+            { label: 'Ask AI Underwriter', sub: "Structured Q&A on this borrower's financials and qualification", href: '/advisor', step: '4' },
+            { label: 'M&A Suite & CIM', sub: 'Valuation narrative · Buyer discovery · CIM generation', href: '/ma', step: '5' },
+            { label: 'Balance Sheet & Cap Table', sub: 'Asset/liability spreading · Ownership structure', href: '/balance-sheet', step: '6' },
           ].map(a => (
-            <Link key={a.href} href={a.href} className="quick-action-link" style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid var(--border-subtle)' }}>
-              <div>
-                <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{a.label}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{a.sub}</div>
+            <Link key={a.href} href={a.href} className="quick-action-link" style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 700, color: 'var(--green)', flexShrink: 0, marginTop: 2 }}>{a.step}</div>
+                <div>
+                  <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{a.label}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{a.sub}</div>
+                </div>
               </div>
-              <span style={{ color: 'var(--text-tertiary)', fontSize: '1rem' }}>→</span>
+              <span style={{ color: 'var(--text-tertiary)', fontSize: '1rem', flexShrink: 0 }}>→</span>
             </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ROI calculator strip */}
+      <div className="card reveal d3" style={{ marginBottom: '1rem', background: 'var(--bg-surface)' }}>
+        <div className="stripe-row-title" style={{ marginBottom: '0.75rem' }}>Unit Economics at a Glance</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
+          {[
+            { label: 'Cost / Application (Manual)', value: '$200–$600', note: 'At $100K analyst salary, 200 loans/yr' },
+            { label: 'Time Saved / Application', value: '~5 hours', note: 'From 4–8 hrs → under 30 min' },
+            { label: 'Annual Analyst Cost (PLP)', value: '$40–120K', note: '200 loans × $200–600/loan' },
+            { label: 'Platform ACV', value: '$24–60K', note: '$2,000–$5,000/month per institution' },
+          ].map(s => (
+            <div key={s.label} style={{ padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.75rem', border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600, marginBottom: '0.25rem' }}>{s.label}</div>
+              <div style={{ fontSize: '1rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--green)', marginBottom: '0.125rem' }}>{s.value}</div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>{s.note}</div>
+            </div>
           ))}
         </div>
       </div>
 
       {/* Recent AI analysis */}
       {recentAdvice && (
-        <div className="card reveal d3">
+        <div className="card reveal d4">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
             <div className="stripe-row-title">Recent AI Analysis</div>
             <Link href="/advisor" style={{ fontSize: '0.75rem', color: 'var(--green)', textDecoration: 'none' }}>View conversation →</Link>
@@ -214,7 +272,7 @@ export default function PipelineDashboard() {
             {recentAdvice}
           </p>
           <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.5rem', fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>
-            This analysis is for loan officer review only. All credit decisions remain with the loan officer.
+            For loan officer review only. All credit decisions remain with the loan officer. Not a credit opinion.
           </div>
         </div>
       )}

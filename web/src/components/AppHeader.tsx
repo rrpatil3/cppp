@@ -4,15 +4,17 @@ import { usePathname } from 'next/navigation';
 import { Bell, Search } from 'lucide-react';
 
 const PAGE_META: Record<string, { section: string; title: string }> = {
-  '/':              { section: 'Main',    title: 'Dashboard' },
-  '/advisor':       { section: 'AI',      title: 'AI Advisor' },
-  '/tools':         { section: 'Tools',   title: 'Financial Tools' },
-  '/ma':            { section: 'M&A',     title: 'M&A Suite' },
-  '/balance-sheet': { section: 'Finance', title: 'Balance Sheet' },
-  '/ownership':     { section: 'Equity',  title: 'Cap Table' },
-  '/settings':      { section: 'Account', title: 'Settings' },
-  '/onboarding':    { section: 'Setup',   title: 'Onboarding' },
-  '/login':         { section: '',        title: 'Sign In' },
+  '/':              { section: 'SBA Lender',    title: 'Underwriting Pipeline' },
+  '/underwriting':  { section: 'SBA Analysis',  title: 'DSCR & SBA Ratios' },
+  '/credit-memo':   { section: 'AI',            title: 'Credit Memo Generator' },
+  '/advisor':       { section: 'AI',            title: 'AI Underwriter Advisor' },
+  '/ma':            { section: 'M&A',           title: 'M&A Suite' },
+  '/tools':         { section: 'Due Diligence', title: 'Financial Analysis Tools' },
+  '/balance-sheet': { section: 'Finance',       title: 'Balance Sheet' },
+  '/ownership':     { section: 'Equity',        title: 'Cap Table' },
+  '/settings':      { section: 'Account',       title: 'Institution Settings' },
+  '/onboarding':    { section: 'Setup',         title: 'Add Borrower' },
+  '/login':         { section: '',              title: 'Sign In' },
 };
 
 export default function AppHeader() {

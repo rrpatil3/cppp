@@ -7,8 +7,8 @@ import AppHeader from '@/components/AppHeader';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'CapTable AI — Goldman Sachs for Main Street',
-  description: 'AI-powered financial intelligence platform for small business owners preparing for exit, seeking capital, or monitoring financial health.',
+  title: 'CapTable AI — SBA Underwriting Intelligence',
+  description: 'AI-powered financial analysis for SBA lenders. Automates business valuation, document generation, and financial narrative work for SBA 7(a) loan underwriting. Reduces 4–8 hours of analyst work to under 30 minutes.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

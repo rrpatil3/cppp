@@ -11,6 +11,7 @@ import {
   Users,
   Settings,
   ClipboardList,
+  Briefcase,
 } from 'lucide-react';
 
 interface NavProps {
@@ -18,14 +19,15 @@ interface NavProps {
 }
 
 const NAV_ITEMS = [
-  { label: 'Pipeline',       route: '/',             icon: LayoutDashboard },
-  { label: 'Underwriting',   route: '/underwriting', icon: BarChart3 },
-  { label: 'Credit Memo',    route: '/credit-memo',  icon: FileText },
-  { label: 'AI Underwriter', route: '/advisor',      icon: MessageSquare },
-  { label: 'Due Diligence',  route: '/tools',        icon: ClipboardList },
-  { label: 'Balance Sheet',  route: '/balance-sheet', icon: DollarSign },
-  { label: 'Ownership',      route: '/ownership',    icon: Users },
-  { label: 'Settings',       route: '/settings',     icon: Settings },
+  { label: 'Pipeline',       route: '/',             icon: LayoutDashboard, badge: null },
+  { label: 'Underwriting',   route: '/underwriting', icon: BarChart3,        badge: null },
+  { label: 'Credit Memo',    route: '/credit-memo',  icon: FileText,         badge: 'AI' },
+  { label: 'AI Advisor',     route: '/advisor',      icon: MessageSquare,    badge: 'AI' },
+  { label: 'M&A Suite',      route: '/ma',           icon: Briefcase,        badge: 'AI' },
+  { label: 'Due Diligence',  route: '/tools',        icon: ClipboardList,    badge: null },
+  { label: 'Balance Sheet',  route: '/balance-sheet', icon: DollarSign,      badge: null },
+  { label: 'Cap Table',      route: '/ownership',    icon: Users,            badge: null },
+  { label: 'Settings',       route: '/settings',     icon: Settings,         badge: null },
 ];
 
 export default function Nav({ mobile = false }: NavProps) {
@@ -119,7 +121,7 @@ export default function Nav({ mobile = false }: NavProps) {
           </div>
           <div>
             <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>CapTable AI</div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>SBA Underwriting</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>SBA Lender Platform</div>
           </div>
         </div>
       </div>
@@ -164,7 +166,7 @@ export default function Nav({ mobile = false }: NavProps) {
                 style={{ color: active ? 'var(--green)' : 'inherit', flexShrink: 0, transition: 'color 0.2s' }}
               />
               <span>{item.label}</span>
-              {item.label === 'Credit Memo' && (
+              {item.badge && (
                 <span
                   style={{
                     marginLeft: 'auto',
@@ -178,7 +180,7 @@ export default function Nav({ mobile = false }: NavProps) {
                     borderRadius: 9999,
                   }}
                 >
-                  AI
+                  {item.badge}
                 </span>
               )}
             </Link>
@@ -200,7 +202,7 @@ export default function Nav({ mobile = false }: NavProps) {
             Analytical Support Only
           </p>
           <p style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', lineHeight: 1.5 }}>
-            All outputs require loan officer review before use in credit files. Not a credit decision tool.
+            All outputs require loan officer review. Not a credit decision tool. Pre-seed · Seeking $1.5M.
           </p>
         </div>
       </div>
