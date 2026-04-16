@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
 import {
   LayoutDashboard,
   MessageSquare,
@@ -55,13 +54,14 @@ export default function Nav({ mobile = false }: NavProps) {
                 alignItems: 'center',
                 gap: '0.2rem',
                 padding: '0.35rem 0.5rem',
-                borderRadius: '0.5rem',
+                borderRadius: '0.625rem',
                 color: active ? 'var(--green)' : 'var(--text-tertiary)',
                 background: active ? 'var(--green-dim)' : 'transparent',
                 textDecoration: 'none',
                 fontSize: '0.6rem',
                 fontWeight: 600,
                 minWidth: 44,
+                transition: 'color 0.2s, background 0.2s',
               }}
             >
               <Icon size={18} />
@@ -93,6 +93,7 @@ export default function Nav({ mobile = false }: NavProps) {
           alignItems: 'center',
           padding: '0 2rem',
           borderBottom: '1px solid var(--border)',
+          flexShrink: 0,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -121,15 +122,15 @@ export default function Nav({ mobile = false }: NavProps) {
         </div>
       </div>
 
-      {/* Nav section label */}
-      <div style={{ padding: '1.5rem 1rem 0.5rem 1.5rem' }}>
+      {/* Section label */}
+      <div style={{ padding: '1.5rem 1.5rem 0.5rem' }}>
         <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>
           Main / Dashboard
         </span>
       </div>
 
       {/* Nav items */}
-      <div style={{ flex: 1, padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+      <div style={{ flex: 1, padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', overflowY: 'auto' }}>
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.route;
           const Icon = item.icon;
@@ -149,29 +150,16 @@ export default function Nav({ mobile = false }: NavProps) {
                 textDecoration: 'none',
                 fontSize: '0.875rem',
                 fontWeight: active ? 500 : 400,
-                transition: 'color 0.2s ease',
-                zIndex: 0,
+                background: active ? 'var(--bg-elevated)' : 'transparent',
+                border: active ? '1px solid var(--border)' : '1px solid transparent',
+                transition: 'color 0.2s, background 0.2s',
               }}
               className="nav-item-link"
             >
-              {active && (
-                <motion.div
-                  layoutId="activeNavIndicator"
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: '0.75rem',
-                    background: 'var(--bg-elevated)',
-                    border: '1px solid var(--border)',
-                    zIndex: -1,
-                  }}
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
-                />
-              )}
               <Icon
                 size={17}
                 strokeWidth={active ? 2.5 : 2}
-                style={{ color: active ? 'var(--green)' : 'inherit', flexShrink: 0 }}
+                style={{ color: active ? 'var(--green)' : 'inherit', flexShrink: 0, transition: 'color 0.2s' }}
               />
               <span>{item.label}</span>
               {item.label === 'M&A Suite' && (
@@ -197,49 +185,46 @@ export default function Nav({ mobile = false }: NavProps) {
       </div>
 
       {/* Footer card */}
-      <div style={{ padding: '1.5rem 1rem' }}>
+      <div style={{ padding: '1.5rem 1rem', flexShrink: 0 }}>
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: '0',
+            alignItems: 'center',
+            gap: '0.75rem',
             padding: '1rem',
             borderRadius: '1rem',
             background: 'var(--bg-surface)',
             border: '1px solid var(--border)',
-            position: 'relative',
-            overflow: 'hidden',
             cursor: 'pointer',
+            transition: 'border-color 0.2s',
           }}
           className="footer-card-hover"
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div
-              style={{
-                width: 38,
-                height: 38,
-                borderRadius: '50%',
-                background: 'var(--bg-overlay)',
-                border: '2px solid var(--border)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                color: 'var(--green)',
-                flexShrink: 0,
-              }}
-            >
-              AI
-            </div>
-            <div style={{ overflow: 'hidden' }}>
-              <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                Unlock AI Features
-              </p>
-              <p style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                Your financial assistant
-              </p>
-            </div>
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: '50%',
+              background: 'var(--bg-overlay)',
+              border: '2px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              color: 'var(--green)',
+              flexShrink: 0,
+            }}
+          >
+            AI
+          </div>
+          <div style={{ overflow: 'hidden' }}>
+            <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Unlock AI Features
+            </p>
+            <p style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              Your financial assistant
+            </p>
           </div>
         </div>
       </div>
