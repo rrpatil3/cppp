@@ -4,22 +4,35 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
-  calculateHealthScore, computeDealReadinessScore, computeValuationRange,
-  detectRedFlags, formatCompact, formatCurrency, getHealthLabel, getHealthInsight,
+  calculateHealthScore, computeValuationRange, detectRedFlags,
+  formatCompact, formatCurrency, getHealthLabel,
 } from '@/lib/calculator';
 import type { Business, BalanceSheetItem } from '@/lib/types';
-import AnimatedSparkline from '@/components/AnimatedSparkline';
-import CounterNumber from '@/components/CounterNumber';
 import Link from 'next/link';
 
-interface PageData {
+interface BorrowerCard {
   business: Business;
+  healthScore: number;
+  healthLabel: string;
+  estimatedValuation: number;
+  netMargin: number;
   items: BalanceSheetItem[];
-  recentAdvice: string | null;
-  sparkData: { value: number }[];
 }
 
-export default function DashboardPage() {
+interface PageData {
+  borrower: BorrowerCard | null;
+  recentAdvice: string | null;
+}
+
+const STATUS_COLORS: Record<string, string> = {
+  pipeline: 'var(--text-tertiary)',
+  'in-review': 'var(--gold)',
+  approved: 'var(--green)',
+  declined: 'var(--red)',
+  'on-hold': '#f97316',
+};
+
+export default function PipelineDashboard() {
   const router = useRouter();
   const [data, setData] = useState<PageData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,22 +44,35 @@ export default function DashboardPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push('/login'); return; }
 
-      const [bizResult, bsResult, chatResult, snapResult] = await Promise.all([
+      const [bizResult, bsResult, chatResult] = await Promise.all([
         supabase.from('businesses').select('*').eq('user_id', user.id).single(),
         supabase.from('balance_sheet_items').select('*').eq('user_id', user.id),
         supabase.from('chat_history').select('content').eq('user_id', user.id).eq('role', 'assistant').order('created_at', { ascending: false }).limit(1),
-        supabase.from('business_snapshots').select('*').eq('user_id', user.id).order('snapshot_date', { ascending: true }).limit(30),
       ]);
 
       if (!bizResult.data) { router.push('/onboarding'); return; }
 
       const business = bizResult.data as Business;
       const items = (bsResult.data || []) as BalanceSheetItem[];
-      const recentAdvice = (chatResult.data?.[0] as { content: string } | undefined)?.content ?? null;
-      const snaps = (snapResult.data || []) as { annual_revenue: number | null }[];
-      const sparkData = snaps.map(s => ({ value: s.annual_revenue ?? business.annual_revenue }));
 
-      setData({ business, items, recentAdvice, sparkData });
+      const assets = items.filter(i => i.type === 'ASSET').reduce((s, i) => s + i.value, 0);
+      const liabilities = items.filter(i => i.type === 'LIABILITY').reduce((s, i) => s + i.value, 0);
+      const equity = assets - liabilities;
+      const healthScore = calculateHealthScore(business, assets, liabilities, equity);
+      const valuationRange = computeValuationRange(business);
+      const netMargin = business.annual_revenue > 0 ? (business.net_income / business.annual_revenue) * 100 : 0;
+
+      setData({
+        borrower: {
+          business,
+          healthScore,
+          healthLabel: getHealthLabel(healthScore),
+          estimatedValuation: (valuationRange.low + valuationRange.high) / 2,
+          netMargin,
+          items,
+        },
+        recentAdvice: (chatResult.data?.[0] as { content: string } | undefined)?.content ?? null,
+      });
       setLoading(false);
     }
 
@@ -56,7 +82,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {[200, 80, 80, 80, 160, 160].map((h, i) => (
+        {[80, 200, 80, 160].map((h, i) => (
           <div key={i} className="skeleton" style={{ height: h, borderRadius: '1rem' }} />
         ))}
       </div>
@@ -64,70 +90,35 @@ export default function DashboardPage() {
   }
 
   if (!data) return null;
+  const { borrower: b, recentAdvice } = data;
+  if (!b) return null;
 
-  const { business: b, items, recentAdvice, sparkData } = data;
-
-  const assets = items.filter(i => i.type === 'ASSET').reduce((s, i) => s + i.value, 0);
-  const liabilities = items.filter(i => i.type === 'LIABILITY').reduce((s, i) => s + i.value, 0);
+  const assets = b.items.filter(i => i.type === 'ASSET').reduce((s, i) => s + i.value, 0);
+  const liabilities = b.items.filter(i => i.type === 'LIABILITY').reduce((s, i) => s + i.value, 0);
   const equity = assets - liabilities;
-
-  const healthScore = calculateHealthScore(b, assets, liabilities, equity);
-  const readinessScore = computeDealReadinessScore(b);
-  const valuationRange = computeValuationRange(b);
-  const redFlags = detectRedFlags(b, liabilities, equity);
-  const estimatedValuation = (valuationRange.low + valuationRange.high) / 2;
-  const netMargin = b.annual_revenue > 0 ? (b.net_income / b.annual_revenue) * 100 : 0;
+  const redFlags = detectRedFlags(b.business, liabilities, equity);
   const deRatio = equity > 0 ? liabilities / equity : 0;
-  const healthLabel = getHealthLabel(healthScore);
-  const healthInsight = getHealthInsight(healthScore, b, equity);
-
-  const readinessFactors = [
-    { label: 'Clean Books', val: b.readiness_clean_books },
-    { label: 'Revenue Quality', val: b.readiness_revenue_quality },
-    { label: 'Owner Independent', val: b.readiness_owner_independent },
-    { label: 'No Concentration', val: b.readiness_no_concentration },
-    { label: 'Growing', val: b.readiness_growing },
-  ];
 
   return (
     <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
 
-      {/* Hero */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem', marginBottom: '1rem', alignItems: 'end' }}>
-        <div className="card" style={{ paddingBottom: '0' }}>
-          <div style={{ fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.25rem' }}>Estimated Valuation</div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <CounterNumber
-              value={estimatedValuation}
-              formatter={v => formatCompact(v)}
-              style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--green)', fontFamily: 'var(--font-mono)', lineHeight: 1 }}
-            />
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-            Range: {formatCompact(valuationRange.low)} – {formatCompact(valuationRange.high)} · {valuationRange.label}
-          </div>
-          <AnimatedSparkline data={sparkData.length > 1 ? sparkData : undefined} height={56} />
-        </div>
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <div style={{ fontSize: '0.7rem', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>Business Health</div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
-            <CounterNumber value={healthScore} style={{ fontSize: '2.25rem', fontWeight: 800, color: healthScore >= 70 ? 'var(--green)' : healthScore >= 45 ? 'var(--gold)' : 'var(--red)', fontFamily: 'var(--font-mono)' }} />
-            <span style={{ color: 'var(--text-tertiary)', fontSize: '1rem' }}>/100</span>
-          </div>
-          <span className={`badge ${healthScore >= 70 ? 'badge-green' : healthScore >= 45 ? 'badge-yellow' : 'badge-red'}`} style={{ alignSelf: 'flex-start' }}>{healthLabel}</span>
-          <div style={{ background: 'var(--bg-elevated)', borderRadius: 4, height: 6, overflow: 'hidden', marginTop: '0.25rem' }}>
-            <div className="bar-fill" style={{ width: `${healthScore}%`, background: healthScore >= 70 ? 'var(--green)' : healthScore >= 45 ? 'var(--gold)' : 'var(--red)' }} />
-          </div>
-        </div>
+      {/* Page header */}
+      <div style={{ marginBottom: '1.25rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
+          Underwriting Pipeline
+        </h1>
+        <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
+          Active borrower analysis · All outputs require loan officer review before use in credit files
+        </p>
       </div>
 
-      {/* Metrics */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+      {/* KPI strip */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '1rem' }}>
         {[
-          { label: 'Annual Revenue', value: formatCompact(b.annual_revenue), sub: '' },
-          { label: 'Net Income', value: formatCompact(b.net_income), sub: `${netMargin.toFixed(1)}% margin` },
+          { label: 'Borrower Revenue', value: formatCompact(b.business.annual_revenue), sub: 'Annual' },
+          { label: 'Net Income', value: formatCompact(b.business.net_income), sub: `${b.netMargin.toFixed(1)}% margin` },
+          { label: 'Est. Business Value', value: formatCompact(b.estimatedValuation), sub: 'Blended multiple' },
           { label: 'D/E Ratio', value: deRatio > 0 ? `${deRatio.toFixed(1)}×` : 'N/A', sub: deRatio > 3 ? 'Elevated' : 'Healthy' },
-          { label: 'Net Margin', value: `${netMargin.toFixed(1)}%`, sub: netMargin > 10 ? 'Strong' : netMargin > 5 ? 'Moderate' : 'Thin' },
         ].map(m => (
           <div key={m.label} className="card stat-card">
             <div style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.25rem' }}>{m.label}</div>
@@ -137,11 +128,42 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Red Flags */}
+      {/* Active borrower card */}
+      <div className="card reveal d0" style={{ marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+          <div>
+            <div style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.25rem' }}>Active Application</div>
+            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{b.business.business_name}</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{b.business.industry || 'Industry not specified'} · {b.business.employees} employees</div>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <span className={`badge ${b.healthScore >= 70 ? 'badge-green' : b.healthScore >= 45 ? 'badge-yellow' : 'badge-red'}`}>
+              {b.healthLabel} · {b.healthScore}/100
+            </span>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', marginTop: '0.375rem' }}>SBA Health Score</div>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem' }}>
+          {[
+            { label: 'Annual Revenue', value: formatCurrency(b.business.annual_revenue) },
+            { label: 'Net Income', value: formatCurrency(b.business.net_income) },
+            { label: 'EBIT', value: formatCurrency(b.business.ebit) },
+            { label: 'Total Equity', value: formatCurrency(equity) },
+          ].map(row => (
+            <div key={row.label}>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', marginBottom: '0.125rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{row.label}</div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{row.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Risk flags */}
       {redFlags.length > 0 && (
-        <div className="card reveal d0" style={{ marginBottom: '1rem' }}>
+        <div className="card reveal d1" style={{ marginBottom: '1rem' }}>
           <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--red)', marginBottom: '0.75rem' }}>
-            {redFlags.length} Risk Factor{redFlags.length > 1 ? 's' : ''} Detected
+            {redFlags.length} Underwriting Risk{redFlags.length > 1 ? 's' : ''} Detected
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
             {redFlags.map((flag, i) => (
@@ -160,65 +182,15 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-        {/* Financial Health */}
-        <div className="card reveal d1">
-          <div className="stripe-row-title" style={{ marginBottom: '0.75rem' }}>Financial Health</div>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '0.875rem' }}>{healthInsight}</p>
-          {[
-            { label: 'Revenue', value: formatCurrency(b.annual_revenue) },
-            { label: 'Net Income', value: formatCurrency(b.net_income) },
-            { label: 'EBIT', value: formatCurrency(b.ebit) },
-            { label: 'Net Equity', value: formatCurrency(equity) },
-          ].map(row => (
-            <div className="data-row" key={row.label}>
-              <span className="data-row-label">{row.label}</span>
-              <span className="data-row-value">{row.value}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Exit Readiness */}
-        <div className="card reveal d2">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-            <div className="stripe-row-title">Exit Readiness</div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: readinessScore >= 70 ? 'var(--green)' : readinessScore >= 40 ? 'var(--gold)' : 'var(--red)' }}>{readinessScore}</div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>/ 100</div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {readinessFactors.map(f => (
-              <div key={f.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{f.label}</span>
-                <div style={{ display: 'flex', gap: '0.25rem' }}>
-                  {[1, 2, 3].map(v => (
-                    <div key={v} style={{
-                      width: 10, height: 10, borderRadius: '50%',
-                      background: f.val >= v ? 'var(--green)' : 'var(--bg-overlay)',
-                      border: '1px solid',
-                      borderColor: f.val >= v ? 'var(--green)' : 'var(--border)',
-                    }} />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          <Link href="/settings" style={{ fontSize: '0.75rem', color: 'var(--green)', textDecoration: 'none', marginTop: '0.75rem', display: 'block' }}>
-            Update readiness factors →
-          </Link>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="card reveal d3" style={{ marginBottom: '1rem' }}>
-        <div className="stripe-row-title" style={{ marginBottom: '0.75rem' }}>Quick Actions</div>
+      {/* Quick Actions — loan officer workflow */}
+      <div className="card reveal d2" style={{ marginBottom: '1rem' }}>
+        <div className="stripe-row-title" style={{ marginBottom: '0.75rem' }}>Loan Officer Workflow</div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
           {[
-            { label: 'Run Financial Analysis', sub: '9 analysis tools', href: '/tools' },
-            { label: 'Explore M&A Options', sub: 'Valuation, buyers, CIM', href: '/ma' },
-            { label: 'Update Balance Sheet', sub: 'Assets & liabilities', href: '/balance-sheet' },
-            { label: 'Ask AI Advisor', sub: 'Get personalized advice', href: '/advisor' },
+            { label: 'Run DSCR Analysis', sub: 'Global cash flow · SBA ratios', href: '/underwriting' },
+            { label: 'Generate Credit Memo', sub: 'AI-drafted credit memo', href: '/credit-memo' },
+            { label: 'Due Diligence Checklist', sub: '12-category DD assessment', href: '/tools' },
+            { label: 'Ask AI Underwriter', sub: 'Structured Q&A on this borrower', href: '/advisor' },
           ].map(a => (
             <Link key={a.href} href={a.href} className="quick-action-link" style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid var(--border-subtle)' }}>
               <div>
@@ -231,16 +203,19 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Advice */}
+      {/* Recent AI analysis */}
       {recentAdvice && (
-        <div className="card reveal d4">
+        <div className="card reveal d3">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <div className="stripe-row-title">Recent AI Advice</div>
+            <div className="stripe-row-title">Recent AI Analysis</div>
             <Link href="/advisor" style={{ fontSize: '0.75rem', color: 'var(--green)', textDecoration: 'none' }}>View conversation →</Link>
           </div>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {recentAdvice}
           </p>
+          <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.5rem', fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>
+            This analysis is for loan officer review only. All credit decisions remain with the loan officer.
+          </div>
         </div>
       )}
     </div>

@@ -10,7 +10,7 @@ function buildSystemPrompt(req: AiRequest): string {
   const equity = assets - liabilities;
 
   const businessContext = `
-## Business Profile
+## Borrower Profile
 - Name: ${b.business_name}
 - Industry: ${b.industry || 'Not specified'}
 - Employees: ${b.employees}
@@ -22,21 +22,28 @@ function buildSystemPrompt(req: AiRequest): string {
 - Total Liabilities: $${liabilities.toLocaleString()}
 - Net Equity: $${equity.toLocaleString()}
 ${b.business_description ? `- Description: ${b.business_description}` : ''}
-${b.growth_story ? `- Growth Story: ${b.growth_story}` : ''}
-${b.competitive_moat ? `- Competitive Moat: ${b.competitive_moat}` : ''}
-${b.reason_for_sale ? `- Reason for Sale: ${b.reason_for_sale}` : ''}
-${b.owner_role ? `- Owner Role: ${b.owner_role}` : ''}
   `.trim();
 
   const prompts: Record<string, string> = {
-    advisor: `You are an expert M&A and financial advisor for small and mid-size businesses. You give clear, actionable, sophisticated financial guidance. Always respond in markdown format. Be concise but thorough. Current business context:\n\n${businessContext}`,
-    valuation: `You are a senior M&A advisor estimating the fair market value of a small business. Provide a detailed valuation analysis using three methods: Revenue Multiple, EBITDA Multiple, and DCF (assume 5% terminal growth rate). Give a blended valuation range with clear reasoning. Format in markdown with sections. Business context:\n\n${businessContext}`,
-    buyers: `You are a senior M&A advisor identifying potential acquirers. Identify 5–8 specific types of strategic and financial buyers with rationale for each, estimated offer range, and recommended first steps. Format in markdown. Business context:\n\n${businessContext}`,
-    strategy: `You are a capital markets advisor for SMBs. Analyze the best capital-raising options including: SBA 7(a) Loan, Bank Term Loan, Equipment Financing, Revenue-Based Financing, and PE Recapitalization. For each option, discuss fit, pros, cons, and typical terms. Format in markdown. Business context:\n\n${businessContext}`,
-    cim: `You are a senior investment banker writing a Confidential Information Memorandum (CIM) teaser. Write a 1-page Executive Summary with sections: Business Overview, Investment Highlights, Financial Snapshot, Growth Opportunities, and Transaction Considerations. Professional, polished tone. Format in markdown. Business context:\n\n${businessContext}`,
-    'dd-report': `You are an M&A due diligence readiness assessor. Evaluate the business against 12 standard DD categories: (1) Financial Statements, (2) Revenue Quality, (3) Customer Concentration, (4) Contracts & Agreements, (5) IP & Technology, (6) HR & Org Structure, (7) Legal & Litigation, (8) Regulatory Compliance, (9) Operational Processes, (10) Facilities & Equipment, (11) Environmental, (12) Insurance. Provide overall assessment, key risks, action plan, and estimated timeline. Format in markdown. Business context:\n\n${businessContext}`,
+    advisor: `You are an expert SBA loan underwriter and financial analyst at a Preferred Lender Program (PLP) institution. You provide clear, analytical, and actionable underwriting guidance to loan officers. Always respond in markdown format. Be concise but thorough. Focus on SBA 7(a) underwriting standards, DSCR analysis, and credit risk assessment. Current borrower context:\n\n${businessContext}`,
+
+    'credit-memo': `You are a senior SBA loan officer at a Preferred Lender Program (PLP) institution writing an internal credit memo for a 7(a) loan file. Your credit memos are structured, professional, and meet SBA underwriting standards. Format in markdown with clear section headers. Be analytical and objective — note both strengths and risks. Always include disclaimers that this is analytical support requiring loan officer review and does not constitute a credit opinion or lending recommendation. Borrower context:\n\n${businessContext}`,
+
+    'sba-analysis': `You are a senior SBA underwriting analyst at a Preferred Lender Program institution. Provide a comprehensive SBA 7(a) underwriting analysis including DSCR assessment, financial strength evaluation, risk factors, and SBA eligibility considerations. Format in markdown. Borrower context:\n\n${businessContext}`,
+
+    valuation: `You are a senior SBA underwriter estimating the fair market value of a borrower's business for collateral assessment purposes. Provide a detailed valuation analysis using: Revenue Multiple, EBITDA Multiple, and DCF methods. Give a blended valuation range with clear reasoning. Format in markdown. Note this is for analytical support and requires loan officer review. Borrower context:\n\n${businessContext}`,
+
+    buyers: `You are a senior M&A advisor identifying potential acquirers for this business. Identify 5–8 specific types of strategic and financial buyers with rationale, estimated offer range, and recommended first steps. Format in markdown. Business context:\n\n${businessContext}`,
+
+    strategy: `You are a capital markets advisor analyzing capital-raising options for this business. Analyze: SBA 7(a) Loan, SBA 504 Loan, USDA B&I Loan, Bank Term Loan, Equipment Financing, and Revenue-Based Financing. For each: fit, pros, cons, typical terms. Format in markdown. Business context:\n\n${businessContext}`,
+
+    cim: `You are a senior investment banker writing a Confidential Information Memorandum (CIM) teaser. Write a 1-page Executive Summary with: Business Overview, Investment Highlights, Financial Snapshot, Growth Opportunities, and Transaction Considerations. Professional, polished tone. Format in markdown. Business context:\n\n${businessContext}`,
+
+    'dd-report': `You are an SBA due diligence specialist. Evaluate this borrower against 12 standard DD categories for SBA 7(a) lending: (1) Financial Statements Quality, (2) Revenue Quality & Concentration, (3) Customer Contracts, (4) Debt Schedule, (5) IP & Technology, (6) HR & Org Structure, (7) Legal & Litigation, (8) SBA Eligibility, (9) Operational Processes, (10) Facilities & Equipment, (11) Environmental, (12) Insurance. Provide overall assessment, key risks, action plan, and estimated timeline. Format in markdown. Borrower context:\n\n${businessContext}`,
+
     'buyer-view': `You are a buy-side PE analyst writing an internal deal memo. Write a memo covering: Executive Summary, Business Quality Assessment, Financial Analysis & Red Flags, Preliminary DD Questions, Key Risks, and Preliminary Valuation. Objective, analytical, skeptical tone. Format in markdown. Business context:\n\n${businessContext}`,
-    'value-drivers': `You are an M&A value-creation advisor. Identify 6–8 specific, ranked actions to increase business value before a sale. For each action: estimated valuation impact, implementation timeline, difficulty (easy/medium/hard), and specific steps. Sort by impact. Format in markdown. Business context:\n\n${businessContext}`,
+
+    'value-drivers': `You are an SBA advisor identifying actions to strengthen this borrower's credit profile and business value. Identify 6–8 specific, ranked actions with: estimated impact on DSCR/valuation, implementation timeline, difficulty (easy/medium/hard), and specific steps. Sort by impact. Format in markdown. Business context:\n\n${businessContext}`,
   };
 
   return prompts[req.type] || prompts.advisor;
@@ -46,27 +53,27 @@ function buildUserMessage(req: AiRequest): string {
   const addBacks = req.addBacks || [];
   const adjustedEbitda = req.business.ebit + addBacks.reduce((s, a) => s + a.amount, 0);
 
+  if (req.type === 'credit-memo' && req.message) return req.message;
+  if (req.type === 'sba-analysis') {
+    const dscr = req.dscrData;
+    return dscr
+      ? `Provide a comprehensive SBA underwriting analysis. Key metrics: Proposed debt service: $${dscr.proposedDebtService.toLocaleString()}/year, Existing debt service: $${dscr.existingDebtService.toLocaleString()}/year, Owner add-backs: $${(dscr.ownerSalary + dscr.ownerPerks + dscr.depreciation + dscr.nonRecurring).toLocaleString()}, Total debt: $${dscr.totalLiabilities.toLocaleString()}, Tax rate: ${dscr.taxRate}%.`
+      : 'Provide a comprehensive SBA 7(a) underwriting analysis for this borrower.';
+  }
+
   switch (req.type) {
-    case 'advisor':
-      return req.message || 'How can you help me today?';
-    case 'valuation':
-      return `Please provide a comprehensive valuation analysis for my business. EBITDA Add-Backs total $${addBacks.reduce((s, a) => s + a.amount, 0).toLocaleString()}, giving Adjusted EBITDA of $${adjustedEbitda.toLocaleString()}.`;
-    case 'buyers':
-      return `Who are the most likely acquirers for my business and what would motivate them to buy?`;
-    case 'strategy':
-      return `What are the best capital-raising options for my business given my current financials?${req.raiseAmount ? ` I'm looking to raise approximately $${req.raiseAmount.toLocaleString()}.` : ''}`;
-    case 'cim':
-      return `Write a CIM Executive Summary for my business. Additional context: Description: ${req.cimFields?.description || req.business.business_description || 'N/A'}. Growth: ${req.cimFields?.growth || req.business.growth_story || 'N/A'}. Moat: ${req.cimFields?.moat || req.business.competitive_moat || 'N/A'}. Reason for sale: ${req.cimFields?.reason || req.business.reason_for_sale || 'N/A'}. Owner role: ${req.cimFields?.ownerRole || req.business.owner_role || 'N/A'}.`;
+    case 'advisor': return req.message || 'How can I help with this SBA loan analysis today?';
+    case 'valuation': return `Provide a comprehensive business valuation analysis for collateral assessment purposes. EBITDA Add-Backs total $${addBacks.reduce((s, a) => s + a.amount, 0).toLocaleString()}, giving Adjusted EBITDA of $${adjustedEbitda.toLocaleString()}.`;
+    case 'buyers': return 'Who are the most likely acquirers for this business and what would motivate them?';
+    case 'strategy': return `What are the best capital-raising options for this business given current financials?${req.raiseAmount ? ` Looking to raise approximately $${req.raiseAmount.toLocaleString()}.` : ''}`;
+    case 'cim': return `Write a CIM Executive Summary. Additional context: Description: ${req.cimFields?.description || req.business.business_description || 'N/A'}. Growth: ${req.cimFields?.growth || req.business.growth_story || 'N/A'}. Moat: ${req.cimFields?.moat || req.business.competitive_moat || 'N/A'}. Reason for sale: ${req.cimFields?.reason || req.business.reason_for_sale || 'N/A'}. Owner role: ${req.cimFields?.ownerRole || req.business.owner_role || 'N/A'}.`;
     case 'dd-report': {
       const ddItems = req.ddChecks?.filter(c => c.is_complete).map(c => c.item_key).join(', ') || 'None completed';
-      return `Assess my business's due diligence readiness. Completed DD items: ${ddItems}.`;
+      return `Assess this borrower's SBA due diligence readiness. Completed DD items: ${ddItems}.`;
     }
-    case 'buyer-view':
-      return `Write an internal buy-side deal memo for my business as if you were a PE analyst evaluating a potential acquisition.`;
-    case 'value-drivers':
-      return `What are the highest-impact actions I can take to increase my business's value before going to market?`;
-    default:
-      return req.message || '';
+    case 'buyer-view': return 'Write an internal buy-side deal memo for this business as if you were a PE analyst evaluating a potential acquisition.';
+    case 'value-drivers': return 'What are the highest-impact actions this borrower can take to strengthen their credit profile and business value?';
+    default: return req.message || '';
   }
 }
 
@@ -103,7 +110,7 @@ export async function POST(request: NextRequest) {
 
     const response = await client.messages.create({
       model,
-      max_tokens: 2048,
+      max_tokens: body.type === 'credit-memo' ? 4096 : 2048,
       system: [
         {
           type: 'text',

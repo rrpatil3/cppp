@@ -5,11 +5,12 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   MessageSquare,
-  Wrench,
-  TrendingUp,
+  FileText,
+  BarChart3,
   DollarSign,
   Users,
   Settings,
+  ClipboardList,
 } from 'lucide-react';
 
 interface NavProps {
@@ -17,13 +18,14 @@ interface NavProps {
 }
 
 const NAV_ITEMS = [
-  { label: 'Dashboard',     route: '/',             icon: LayoutDashboard },
-  { label: 'AI Advisor',    route: '/advisor',       icon: MessageSquare },
-  { label: 'Tools',         route: '/tools',         icon: Wrench },
-  { label: 'M&A Suite',     route: '/ma',            icon: TrendingUp },
-  { label: 'Balance Sheet', route: '/balance-sheet', icon: DollarSign },
-  { label: 'Cap Table',     route: '/ownership',     icon: Users },
-  { label: 'Settings',      route: '/settings',      icon: Settings },
+  { label: 'Pipeline',       route: '/',             icon: LayoutDashboard },
+  { label: 'Underwriting',   route: '/underwriting', icon: BarChart3 },
+  { label: 'Credit Memo',    route: '/credit-memo',  icon: FileText },
+  { label: 'AI Underwriter', route: '/advisor',      icon: MessageSquare },
+  { label: 'Due Diligence',  route: '/tools',        icon: ClipboardList },
+  { label: 'Balance Sheet',  route: '/balance-sheet', icon: DollarSign },
+  { label: 'Ownership',      route: '/ownership',    icon: Users },
+  { label: 'Settings',       route: '/settings',     icon: Settings },
 ];
 
 export default function Nav({ mobile = false }: NavProps) {
@@ -116,8 +118,8 @@ export default function Nav({ mobile = false }: NavProps) {
             </svg>
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>CapTable</div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>Financial AI</div>
+            <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>CapTable AI</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>SBA Underwriting</div>
           </div>
         </div>
       </div>
@@ -125,7 +127,7 @@ export default function Nav({ mobile = false }: NavProps) {
       {/* Section label */}
       <div style={{ padding: '1.5rem 1.5rem 0.5rem' }}>
         <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>
-          Main / Dashboard
+          Loan Officer Tools
         </span>
       </div>
 
@@ -162,7 +164,7 @@ export default function Nav({ mobile = false }: NavProps) {
                 style={{ color: active ? 'var(--green)' : 'inherit', flexShrink: 0, transition: 'color 0.2s' }}
               />
               <span>{item.label}</span>
-              {item.label === 'M&A Suite' && (
+              {item.label === 'Credit Memo' && (
                 <span
                   style={{
                     marginLeft: 'auto',
@@ -170,13 +172,13 @@ export default function Nav({ mobile = false }: NavProps) {
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
-                    background: 'var(--bg-overlay)',
-                    color: 'var(--text-secondary)',
+                    background: 'var(--green-dim)',
+                    color: 'var(--green)',
                     padding: '0.15rem 0.5rem',
                     borderRadius: 9999,
                   }}
                 >
-                  New
+                  AI
                 </span>
               )}
             </Link>
@@ -184,48 +186,22 @@ export default function Nav({ mobile = false }: NavProps) {
         })}
       </div>
 
-      {/* Footer card */}
+      {/* Footer — SBA compliance note */}
       <div style={{ padding: '1.5rem 1rem', flexShrink: 0 }}>
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
             padding: '1rem',
             borderRadius: '1rem',
             background: 'var(--bg-surface)',
             border: '1px solid var(--border)',
-            cursor: 'pointer',
-            transition: 'border-color 0.2s',
           }}
-          className="footer-card-hover"
         >
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: '50%',
-              background: 'var(--bg-overlay)',
-              border: '2px solid var(--border)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              color: 'var(--green)',
-              flexShrink: 0,
-            }}
-          >
-            AI
-          </div>
-          <div style={{ overflow: 'hidden' }}>
-            <p style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              Unlock AI Features
-            </p>
-            <p style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              Your financial assistant
-            </p>
-          </div>
+          <p style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
+            Analytical Support Only
+          </p>
+          <p style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', lineHeight: 1.5 }}>
+            All outputs require loan officer review before use in credit files. Not a credit decision tool.
+          </p>
         </div>
       </div>
     </nav>

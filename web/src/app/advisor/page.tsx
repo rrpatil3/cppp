@@ -6,10 +6,11 @@ import type { Business, ChatMessage } from '@/lib/types';
 import { marked } from 'marked';
 
 const SUGGESTED = [
-  'What is my business worth?',
-  'How can I improve my valuation?',
-  'What are the best exit strategies for my business?',
-  'How do I prepare for due diligence?',
+  'What are the key DSCR risks for this borrower?',
+  'Does this borrower qualify for SBA 7(a) financing?',
+  'What due diligence documents should I request?',
+  'What questions should I ask in the discovery call with this borrower?',
+  'What are the main credit risks in this application?',
 ];
 
 export default function AdvisorPage() {
