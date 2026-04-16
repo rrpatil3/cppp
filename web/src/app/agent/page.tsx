@@ -1,7 +1,6 @@
 "use client"
 
 import { AgentChat, createAgentChat } from "@21st-sdk/nextjs"
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { useChat } from "@ai-sdk/react"
 import theme from "../theme.json"
 
@@ -10,11 +9,12 @@ const chat = createAgentChat({
   tokenUrl: "/api/an-token",
 })
 
+type AnyChat = any // 21st-sdk targets ai-sdk v2; bridge the type mismatch
+
 export default function Page() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const chatHelpers = useChat({ chat } as any) as any
-  const { messages, status, stop, error } = chatHelpers
-  const handleSubmit = chatHelpers.handleSubmit ?? chatHelpers.submit ?? (() => {})
+  const helpers = useChat({ chat } as AnyChat) as AnyChat
+  const { messages, status, stop, error } = helpers
+  const handleSubmit = helpers.handleSubmit ?? helpers.submit ?? (() => {})
 
   return (
     <AgentChat
