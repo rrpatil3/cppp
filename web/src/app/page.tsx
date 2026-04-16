@@ -1,65 +1,72 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import { calculateHealthScore, computeDealReadinessScore, computeValuationRange, detectRedFlags, formatCompact, formatCurrency, getHealthLabel, getHealthInsight } from '@/lib/calculator';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import {
+  calculateHealthScore, computeDealReadinessScore, computeValuationRange,
+  detectRedFlags, formatCompact, formatCurrency, getHealthLabel, getHealthInsight,
+} from '@/lib/calculator';
 import type { Business, BalanceSheetItem } from '@/lib/types';
 import AnimatedSparkline from '@/components/AnimatedSparkline';
 import CounterNumber from '@/components/CounterNumber';
 import Link from 'next/link';
 
-export const revalidate = 0;
-
-// Re-throw Next.js redirect/notFound signals so they aren't swallowed by catch blocks
-function isNextInternalError(e: unknown): boolean {
-  const digest = (e as { digest?: string })?.digest ?? '';
-  return digest.startsWith('NEXT_REDIRECT') || digest.startsWith('NEXT_NOT_FOUND');
+interface PageData {
+  business: Business;
+  items: BalanceSheetItem[];
+  recentAdvice: string | null;
+  sparkData: { value: number }[];
 }
 
-export default async function DashboardPage() {
-  let supabase: ReturnType<typeof createClient>;
-  try {
-    supabase = createClient();
-  } catch (e) {
-    if (isNextInternalError(e)) throw e;
-    redirect('/login');
+export default function DashboardPage() {
+  const router = useRouter();
+  const [data, setData] = useState<PageData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    async function load() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.push('/login'); return; }
+
+      const [bizResult, bsResult, chatResult, snapResult] = await Promise.all([
+        supabase.from('businesses').select('*').eq('user_id', user.id).single(),
+        supabase.from('balance_sheet_items').select('*').eq('user_id', user.id),
+        supabase.from('chat_history').select('content').eq('user_id', user.id).eq('role', 'assistant').order('created_at', { ascending: false }).limit(1),
+        supabase.from('business_snapshots').select('*').eq('user_id', user.id).order('snapshot_date', { ascending: true }).limit(30),
+      ]);
+
+      if (!bizResult.data) { router.push('/onboarding'); return; }
+
+      const business = bizResult.data as Business;
+      const items = (bsResult.data || []) as BalanceSheetItem[];
+      const recentAdvice = (chatResult.data?.[0] as { content: string } | undefined)?.content ?? null;
+      const snaps = (snapResult.data || []) as { annual_revenue: number | null }[];
+      const sparkData = snaps.map(s => ({ value: s.annual_revenue ?? business.annual_revenue }));
+
+      setData({ business, items, recentAdvice, sparkData });
+      setLoading(false);
+    }
+
+    load();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {[200, 80, 80, 80, 160, 160].map((h, i) => (
+          <div key={i} className="skeleton" style={{ height: h, borderRadius: '1rem' }} />
+        ))}
+      </div>
+    );
   }
 
-  let user: Awaited<ReturnType<typeof supabase.auth.getUser>>['data']['user'];
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch (e) {
-    if (isNextInternalError(e)) throw e;
-    redirect('/login');
-  }
+  if (!data) return null;
 
-  if (!user) redirect('/login');
+  const { business: b, items, recentAdvice, sparkData } = data;
 
-  let business: Business | null = null;
-  let bsItems: BalanceSheetItem[] | null = null;
-  let lastChat: { content: string }[] | null = null;
-  let snapshots: { annual_revenue: number | null; snapshot_date: string }[] | null = null;
-
-  try {
-    const [bizResult, bsResult, chatResult, snapResult] = await Promise.all([
-      supabase.from('businesses').select('*').eq('user_id', user.id).single(),
-      supabase.from('balance_sheet_items').select('*').eq('user_id', user.id),
-      supabase.from('chat_history').select('content').eq('user_id', user.id).eq('role', 'assistant').order('created_at', { ascending: false }).limit(1),
-      supabase.from('business_snapshots').select('*').eq('user_id', user.id).order('snapshot_date', { ascending: true }).limit(30),
-    ]);
-    business = (bizResult.data as Business) ?? null;
-    bsItems = bizResult.error ? null : (bsResult.data as BalanceSheetItem[]);
-    lastChat = chatResult.data as { content: string }[] ?? null;
-    snapshots = snapResult.data as { annual_revenue: number | null; snapshot_date: string }[] ?? null;
-  } catch (e) {
-    if (isNextInternalError(e)) throw e;
-    redirect('/login');
-  }
-
-  if (!business) redirect('/onboarding');
-
-  const b = business;
-
-  const items: BalanceSheetItem[] = bsItems || [];
   const assets = items.filter(i => i.type === 'ASSET').reduce((s, i) => s + i.value, 0);
   const liabilities = items.filter(i => i.type === 'LIABILITY').reduce((s, i) => s + i.value, 0);
   const equity = assets - liabilities;
@@ -73,9 +80,6 @@ export default async function DashboardPage() {
   const deRatio = equity > 0 ? liabilities / equity : 0;
   const healthLabel = getHealthLabel(healthScore);
   const healthInsight = getHealthInsight(healthScore, b, equity);
-  const recentAdvice = lastChat?.[0]?.content || null;
-
-  const sparkData = snapshots?.map(s => ({ value: s.annual_revenue ?? b.annual_revenue })) || [];
 
   const readinessFactors = [
     { label: 'Clean Books', val: b.readiness_clean_books },
