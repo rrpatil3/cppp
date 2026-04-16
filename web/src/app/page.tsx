@@ -1,32 +1,63 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { calculateHealthScore, computeDealReadinessScore, computeValuationRange, detectRedFlags, formatCompact, formatCurrency, getHealthLabel, getHealthInsight } from '@/lib/calculator';
-import type { Business, BalanceSheetItem, ChatMessage } from '@/lib/types';
+import type { Business, BalanceSheetItem } from '@/lib/types';
 import AnimatedSparkline from '@/components/AnimatedSparkline';
 import CounterNumber from '@/components/CounterNumber';
 import Link from 'next/link';
 
 export const revalidate = 0;
 
-export default async function DashboardPage() {
-  const supabase = createClient();
+// Re-throw Next.js redirect/notFound signals so they aren't swallowed by catch blocks
+function isNextInternalError(e: unknown): boolean {
+  const digest = (e as { digest?: string })?.digest ?? '';
+  return digest.startsWith('NEXT_REDIRECT') || digest.startsWith('NEXT_NOT_FOUND');
+}
 
-  const { data: { user } } = await supabase.auth.getUser();
+export default async function DashboardPage() {
+  let supabase: ReturnType<typeof createClient>;
+  try {
+    supabase = createClient();
+  } catch (e) {
+    if (isNextInternalError(e)) throw e;
+    redirect('/login');
+  }
+
+  let user: Awaited<ReturnType<typeof supabase.auth.getUser>>['data']['user'];
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch (e) {
+    if (isNextInternalError(e)) throw e;
+    redirect('/login');
+  }
+
   if (!user) redirect('/login');
 
-  const { data: business } = await supabase
-    .from('businesses')
-    .select('*')
-    .eq('user_id', user.id)
-    .single();
+  let business: Business | null = null;
+  let bsItems: BalanceSheetItem[] | null = null;
+  let lastChat: { content: string }[] | null = null;
+  let snapshots: { annual_revenue: number | null; snapshot_date: string }[] | null = null;
+
+  try {
+    const [bizResult, bsResult, chatResult, snapResult] = await Promise.all([
+      supabase.from('businesses').select('*').eq('user_id', user.id).single(),
+      supabase.from('balance_sheet_items').select('*').eq('user_id', user.id),
+      supabase.from('chat_history').select('content').eq('user_id', user.id).eq('role', 'assistant').order('created_at', { ascending: false }).limit(1),
+      supabase.from('business_snapshots').select('*').eq('user_id', user.id).order('snapshot_date', { ascending: true }).limit(30),
+    ]);
+    business = (bizResult.data as Business) ?? null;
+    bsItems = bizResult.error ? null : (bsResult.data as BalanceSheetItem[]);
+    lastChat = chatResult.data as { content: string }[] ?? null;
+    snapshots = snapResult.data as { annual_revenue: number | null; snapshot_date: string }[] ?? null;
+  } catch (e) {
+    if (isNextInternalError(e)) throw e;
+    redirect('/login');
+  }
 
   if (!business) redirect('/onboarding');
 
-  const b = business as Business;
-
-  const { data: bsItems } = await supabase.from('balance_sheet_items').select('*').eq('user_id', user.id);
-  const { data: lastChat } = await supabase.from('chat_history').select('content').eq('user_id', user.id).eq('role', 'assistant').order('created_at', { ascending: false }).limit(1);
-  const { data: snapshots } = await supabase.from('business_snapshots').select('*').eq('user_id', user.id).order('snapshot_date', { ascending: true }).limit(30);
+  const b = business;
 
   const items: BalanceSheetItem[] = bsItems || [];
   const assets = items.filter(i => i.type === 'ASSET').reduce((s, i) => s + i.value, 0);
