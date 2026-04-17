@@ -9,6 +9,14 @@ import {
 } from '@/lib/calculator';
 import type { Business, BalanceSheetItem } from '@/lib/types';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import {
+  TrendingUp, FileText, CheckSquare, MessageSquare,
+  BarChart2, PieChart, ArrowRight, AlertTriangle,
+  Zap, Shield, Clock, ChevronRight,
+} from 'lucide-react';
+import { SplineScene } from '@/components/ui/splite';
+import { Spotlight } from '@/components/ui/spotlight';
 
 interface BorrowerCard {
   business: Business;
@@ -23,6 +31,21 @@ interface PageData {
   borrower: BorrowerCard | null;
   recentAdvice: string | null;
 }
+
+const workflowItems = [
+  { label: 'Run DSCR & SBA Ratios', sub: 'Global cash flow · Leverage · Collateral', href: '/underwriting', step: '1', icon: TrendingUp, color: '#00E599' },
+  { label: 'Generate Credit Memo', sub: 'AI-drafted SBA 7(a) credit memo', href: '/credit-memo', step: '2', icon: FileText, color: '#3B82F6' },
+  { label: 'Due Diligence Checklist', sub: '12-category DD assessment · Valuation', href: '/tools', step: '3', icon: CheckSquare, color: '#8B5CF6' },
+  { label: 'Ask AI Underwriter', sub: "Structured Q&A on borrower financials", href: '/advisor', step: '4', icon: MessageSquare, color: '#F59E0B' },
+  { label: 'M&A Suite & CIM', sub: 'Valuation · Buyer discovery · CIM gen', href: '/ma', step: '5', icon: BarChart2, color: '#EC4899' },
+  { label: 'Balance Sheet & Cap Table', sub: 'Asset/liability spreading · Ownership', href: '/balance-sheet', step: '6', icon: PieChart, color: '#10B981' },
+];
+
+const platformStats = [
+  { label: 'SBA 7(a) Loans (FY2023)', value: '57,362', icon: Shield },
+  { label: 'Hours Saved / Application', value: '~5 hrs', icon: Clock },
+  { label: 'Target PLPs', value: '140', icon: Zap },
+];
 
 export default function PipelineDashboard() {
   const router = useRouter();
@@ -73,9 +96,9 @@ export default function PipelineDashboard() {
 
   if (loading) {
     return (
-      <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {[80, 200, 80, 160].map((h, i) => (
-          <div key={i} className="skeleton" style={{ height: h, borderRadius: '1rem' }} />
+      <div className="p-6 max-w-6xl mx-auto space-y-4">
+        {[80, 280, 80, 160].map((h, i) => (
+          <div key={i} className="skeleton rounded-2xl" style={{ height: h }} />
         ))}
       </div>
     );
@@ -91,191 +114,313 @@ export default function PipelineDashboard() {
   const redFlags = detectRedFlags(b.business, liabilities, equity);
   const deRatio = equity > 0 ? liabilities / equity : 0;
 
+  const scoreColor = b.healthScore >= 70 ? '#00E599' : b.healthScore >= 45 ? '#F59E0B' : '#FF4444';
+
   return (
-    <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
+    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
 
-      {/* Value prop banner */}
-      <div
-        style={{
-          marginBottom: '1.25rem',
-          padding: '1rem 1.25rem',
-          borderRadius: '1rem',
-          background: 'linear-gradient(135deg, rgba(0,229,153,0.06) 0%, rgba(0,229,153,0.02) 100%)',
-          border: '1px solid rgba(0,229,153,0.15)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '0.75rem',
-        }}
-      >
-        <div>
-          <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
-            SBA 7(a) Underwriting · AI Financial Intelligence for Preferred Lender Programs
-          </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-            Reduces 4–8 hours of manual analyst work to under 30 minutes per application · Analytical support only — not a credit decision tool
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: '1.5rem', flexShrink: 0 }}>
-          {[
-            { label: 'SBA 7(a) Loans (FY2023)', value: '57,362' },
-            { label: 'Hours Saved / Application', value: '~5 hrs' },
-            { label: 'Target PLPs', value: '140' },
-          ].map(s => (
-            <div key={s.label} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '1.1rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--green)' }}>{s.value}</div>
-              <div style={{ fontSize: '0.6rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{s.label}</div>
+      {/* ── Hero: Spline 3D + Left Content ── */}
+      <div className="relative w-full overflow-hidden" style={{ height: 480, borderBottom: '1px solid #1A1A1A' }}>
+        <Spotlight size={600} className="z-10" fill="rgba(0,229,153,0.12)" />
+
+        {/* Subtle grid overlay */}
+        <div
+          className="absolute inset-0 z-0 opacity-[0.03]"
+          style={{
+            backgroundImage: 'linear-gradient(#00E599 1px, transparent 1px), linear-gradient(90deg, #00E599 1px, transparent 1px)',
+            backgroundSize: '48px 48px',
+          }}
+        />
+
+        {/* Left text content */}
+        <div className="absolute left-0 top-0 h-full flex flex-col justify-center z-20 px-10 md:px-16 max-w-xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-semibold tracking-widest uppercase"
+              style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.2)', color: '#00E599' }}>
+              <Zap size={11} />
+              SBA 7(a) AI Underwriting
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Page header */}
-      <div style={{ marginBottom: '1.25rem' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
-          Underwriting Pipeline
-        </h1>
-        <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
-          Active borrower analysis · All outputs require loan officer review before use in credit files
-        </p>
-      </div>
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4"
+              style={{ background: 'linear-gradient(to bottom, #ffffff 40%, #555555)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              AI Financial<br />Intelligence
+            </h1>
 
-      {/* KPI strip */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem', marginBottom: '1rem' }}>
-        {[
-          { label: 'Borrower Revenue', value: formatCompact(b.business.annual_revenue), sub: 'Annual' },
-          { label: 'Net Income', value: formatCompact(b.business.net_income), sub: `${b.netMargin.toFixed(1)}% margin` },
-          { label: 'Est. Business Value', value: formatCompact(b.estimatedValuation), sub: 'Blended multiple' },
-          { label: 'D/E Ratio', value: deRatio > 0 ? `${deRatio.toFixed(1)}×` : 'N/A', sub: deRatio > 3 ? 'Elevated' : 'Healthy' },
-        ].map(m => (
-          <div key={m.label} className="card stat-card">
-            <div style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.25rem' }}>{m.label}</div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{m.value}</div>
-            {m.sub && <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '0.125rem' }}>{m.sub}</div>}
-          </div>
-        ))}
-      </div>
+            <p className="text-sm leading-relaxed mb-6" style={{ color: '#888' }}>
+              Reduces 4–8 hours of analyst work to under 30 minutes per application.
+              Not a credit decision tool — analytical support only.
+            </p>
 
-      {/* Active borrower card */}
-      <div className="card reveal d0" style={{ marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-          <div>
-            <div style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: '0.25rem' }}>Active SBA 7(a) Application</div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{b.business.business_name}</div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{b.business.industry || 'Industry not specified'} · {b.business.employees} employees</div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <span className={`badge ${b.healthScore >= 70 ? 'badge-green' : b.healthScore >= 45 ? 'badge-yellow' : 'badge-red'}`}>
-              {b.healthLabel} · {b.healthScore}/100
-            </span>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', marginTop: '0.375rem' }}>SBA Financial Health Score</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '1rem' }}>
-          {[
-            { label: 'Annual Revenue', value: formatCurrency(b.business.annual_revenue) },
-            { label: 'Net Income', value: formatCurrency(b.business.net_income) },
-            { label: 'EBIT', value: formatCurrency(b.business.ebit) },
-            { label: 'Total Equity', value: formatCurrency(equity) },
-          ].map(row => (
-            <div key={row.label}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', marginBottom: '0.125rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>{row.label}</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>{row.value}</div>
+            <div className="flex gap-3">
+              <Link href="/underwriting"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-200"
+                style={{ background: '#00E599', color: '#000' }}>
+                Start Analysis <ArrowRight size={14} />
+              </Link>
+              <Link href="/advisor"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm transition-all duration-200"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid #222', color: '#fff' }}>
+                Ask AI <ChevronRight size={14} />
+              </Link>
             </div>
-          ))}
+          </motion.div>
+
+          {/* Platform stats row */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="flex gap-8 mt-10"
+          >
+            {platformStats.map((s) => (
+              <div key={s.label}>
+                <div className="text-xl font-extrabold font-mono" style={{ color: '#00E599' }}>{s.value}</div>
+                <div className="text-[10px] uppercase tracking-widest font-semibold mt-0.5" style={{ color: '#555' }}>{s.label}</div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Right: Spline 3D scene */}
+        <div className="absolute right-0 top-0 h-full z-10" style={{ width: '52%' }}>
+          <SplineScene
+            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+            className="w-full h-full"
+          />
+          {/* Fade-left gradient so it blends with left content */}
+          <div className="absolute inset-y-0 left-0 w-32"
+            style={{ background: 'linear-gradient(to right, var(--bg-base), transparent)' }} />
         </div>
       </div>
 
-      {/* Risk flags */}
-      {redFlags.length > 0 && (
-        <div className="card reveal d1" style={{ marginBottom: '1rem' }}>
-          <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--red)', marginBottom: '0.75rem' }}>
-            {redFlags.length} Underwriting Risk{redFlags.length > 1 ? 's' : ''} Detected
+      {/* ── Main content ── */}
+      <div className="px-6 md:px-10 py-8 max-w-6xl mx-auto space-y-6">
+
+        {/* KPI strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-3"
+        >
+          {[
+            { label: 'Borrower Revenue', value: formatCompact(b.business.annual_revenue), sub: 'Annual' },
+            { label: 'Net Income', value: formatCompact(b.business.net_income), sub: `${b.netMargin.toFixed(1)}% margin` },
+            { label: 'Est. Business Value', value: formatCompact(b.estimatedValuation), sub: 'Blended multiple' },
+            { label: 'D/E Ratio', value: deRatio > 0 ? `${deRatio.toFixed(1)}×` : 'N/A', sub: deRatio > 3 ? 'Elevated' : 'Healthy' },
+          ].map((m, i) => (
+            <motion.div
+              key={m.label}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 + i * 0.05 }}
+              className="relative overflow-hidden rounded-2xl p-5"
+              style={{ background: '#111', border: '1px solid #1A1A1A' }}
+            >
+              <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#555' }}>{m.label}</div>
+              <div className="text-2xl font-extrabold font-mono" style={{ color: '#fff' }}>{m.value}</div>
+              {m.sub && <div className="text-xs mt-1" style={{ color: '#555' }}>{m.sub}</div>}
+              <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-10"
+                style={{ background: '#00E599', filter: 'blur(20px)' }} />
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Active borrower card */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="relative overflow-hidden rounded-2xl p-6"
+          style={{ background: '#111', border: '1px solid #1A1A1A' }}
+        >
+          {/* Accent glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 opacity-5 pointer-events-none"
+            style={{ background: `radial-gradient(circle, ${scoreColor} 0%, transparent 70%)` }} />
+
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: '#555' }}>
+                Active SBA 7(a) Application
+              </div>
+              <div className="text-2xl font-bold" style={{ color: '#fff' }}>{b.business.business_name}</div>
+              <div className="text-sm mt-0.5" style={{ color: '#888' }}>
+                {b.business.industry || 'Industry not specified'} · {b.business.employees} employees
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold"
+                style={{ background: `${scoreColor}14`, border: `1px solid ${scoreColor}33`, color: scoreColor }}>
+                {b.healthLabel} · {b.healthScore}/100
+              </div>
+              <div className="text-[10px] mt-1.5" style={{ color: '#555' }}>SBA Financial Health Score</div>
+
+              {/* Score bar */}
+              <div className="mt-2 w-40 h-1.5 rounded-full ml-auto" style={{ background: '#1A1A1A' }}>
+                <div className="h-full rounded-full transition-all duration-1000"
+                  style={{ width: `${b.healthScore}%`, background: scoreColor }} />
+              </div>
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            {redFlags.map((flag, i) => (
-              <div key={i} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                <span className={`badge ${flag.severity === 'critical' ? 'badge-red' : flag.severity === 'warning' ? 'badge-yellow' : 'badge-muted'}`} style={{ flexShrink: 0, marginTop: 2 }}>
-                  {flag.severity}
-                </span>
-                <div>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>{flag.title}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{flag.detail}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginTop: '0.125rem' }}>{flag.action}</div>
-                </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { label: 'Annual Revenue', value: formatCurrency(b.business.annual_revenue) },
+              { label: 'Net Income', value: formatCurrency(b.business.net_income) },
+              { label: 'EBIT', value: formatCurrency(b.business.ebit) },
+              { label: 'Total Equity', value: formatCurrency(equity) },
+            ].map(row => (
+              <div key={row.label}>
+                <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: '#555' }}>{row.label}</div>
+                <div className="text-lg font-bold font-mono" style={{ color: '#fff' }}>{row.value}</div>
               </div>
             ))}
           </div>
-        </div>
-      )}
+        </motion.div>
 
-      {/* Loan officer workflow */}
-      <div className="card reveal d2" style={{ marginBottom: '1rem' }}>
-        <div style={{ marginBottom: '0.75rem' }}>
-          <div className="stripe-row-title">Loan Officer Workflow</div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', marginTop: '0.2rem' }}>
-            Complete a full SBA 7(a) underwriting analysis in under 30 minutes
-          </div>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-          {[
-            { label: 'Run DSCR & SBA Ratios', sub: 'Global cash flow · Leverage · Collateral valuation', href: '/underwriting', step: '1' },
-            { label: 'Generate Credit Memo', sub: 'AI-drafted SBA 7(a) credit memo for loan officer review', href: '/credit-memo', step: '2' },
-            { label: 'Due Diligence Checklist', sub: '12-category DD assessment · Business valuation · Red flags', href: '/tools', step: '3' },
-            { label: 'Ask AI Underwriter', sub: "Structured Q&A on this borrower's financials and qualification", href: '/advisor', step: '4' },
-            { label: 'M&A Suite & CIM', sub: 'Valuation narrative · Buyer discovery · CIM generation', href: '/ma', step: '5' },
-            { label: 'Balance Sheet & Cap Table', sub: 'Asset/liability spreading · Ownership structure', href: '/balance-sheet', step: '6' },
-          ].map(a => (
-            <Link key={a.href} href={a.href} className="quick-action-link" style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 700, color: 'var(--green)', flexShrink: 0, marginTop: 2 }}>{a.step}</div>
-                <div>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{a.label}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>{a.sub}</div>
-                </div>
-              </div>
-              <span style={{ color: 'var(--text-tertiary)', fontSize: '1rem', flexShrink: 0 }}>→</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* ROI calculator strip */}
-      <div className="card reveal d3" style={{ marginBottom: '1rem', background: 'var(--bg-surface)' }}>
-        <div className="stripe-row-title" style={{ marginBottom: '0.75rem' }}>Unit Economics at a Glance</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem' }}>
-          {[
-            { label: 'Cost / Application (Manual)', value: '$200–$600', note: 'At $100K analyst salary, 200 loans/yr' },
-            { label: 'Time Saved / Application', value: '~5 hours', note: 'From 4–8 hrs → under 30 min' },
-            { label: 'Annual Analyst Cost (PLP)', value: '$40–120K', note: '200 loans × $200–600/loan' },
-            { label: 'Platform ACV', value: '$24–60K', note: '$2,000–$5,000/month per institution' },
-          ].map(s => (
-            <div key={s.label} style={{ padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.75rem', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600, marginBottom: '0.25rem' }}>{s.label}</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: 'var(--green)', marginBottom: '0.125rem' }}>{s.value}</div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)' }}>{s.note}</div>
+        {/* Risk flags */}
+        {redFlags.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35 }}
+            className="rounded-2xl p-6"
+            style={{ background: 'rgba(255,68,68,0.04)', border: '1px solid rgba(255,68,68,0.15)' }}
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <AlertTriangle size={14} style={{ color: '#FF4444' }} />
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#FF4444' }}>
+                {redFlags.length} Underwriting Risk{redFlags.length > 1 ? 's' : ''} Detected
+              </span>
             </div>
-          ))}
-        </div>
-      </div>
+            <div className="space-y-3">
+              {redFlags.map((flag, i) => (
+                <div key={i} className="flex gap-3 items-start p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.3)' }}>
+                  <span className={`badge ${flag.severity === 'critical' ? 'badge-red' : flag.severity === 'warning' ? 'badge-yellow' : 'badge-muted'} flex-shrink-0 mt-0.5`}>
+                    {flag.severity}
+                  </span>
+                  <div>
+                    <div className="text-sm font-semibold" style={{ color: '#fff' }}>{flag.title}</div>
+                    <div className="text-xs mt-0.5" style={{ color: '#888' }}>{flag.detail}</div>
+                    <div className="text-xs mt-0.5" style={{ color: '#555' }}>{flag.action}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
-      {/* Recent AI analysis */}
-      {recentAdvice && (
-        <div className="card reveal d4">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <div className="stripe-row-title">Recent AI Analysis</div>
-            <Link href="/advisor" style={{ fontSize: '0.75rem', color: 'var(--green)', textDecoration: 'none' }}>View conversation →</Link>
+        {/* Workflow grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest" style={{ color: '#555' }}>Loan Officer Workflow</div>
+              <div className="text-xs mt-0.5" style={{ color: '#444' }}>Complete a full SBA 7(a) underwriting analysis in under 30 minutes</div>
+            </div>
           </div>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 4, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-            {recentAdvice}
-          </p>
-          <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.5rem', fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>
-            For loan officer review only. All credit decisions remain with the loan officer. Not a credit opinion.
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {workflowItems.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.href}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.45 + i * 0.05 }}
+                  whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                >
+                  <Link
+                    href={item.href}
+                    className="group flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 block"
+                    style={{ background: '#111', border: '1px solid #1A1A1A' }}
+                  >
+                    <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}25` }}>
+                      <Icon size={18} style={{ color: item.color }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold rounded-full px-1.5 py-0.5"
+                          style={{ background: '#1A1A1A', color: item.color, border: `1px solid ${item.color}25` }}>
+                          {item.step}
+                        </span>
+                        <span className="text-sm font-semibold truncate" style={{ color: '#fff' }}>{item.label}</span>
+                      </div>
+                      <div className="text-xs mt-0.5 truncate" style={{ color: '#555' }}>{item.sub}</div>
+                    </div>
+                    <ArrowRight size={14} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                      style={{ color: '#333' }} />
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
-        </div>
-      )}
+        </motion.div>
+
+        {/* Unit economics */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="rounded-2xl p-6"
+          style={{ background: '#111', border: '1px solid #1A1A1A' }}
+        >
+          <div className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: '#555' }}>Unit Economics at a Glance</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'Cost / Application (Manual)', value: '$200–$600', note: 'At $100K analyst salary, 200 loans/yr' },
+              { label: 'Time Saved / Application', value: '~5 hours', note: 'From 4–8 hrs → under 30 min' },
+              { label: 'Annual Analyst Cost (PLP)', value: '$40–120K', note: '200 loans × $200–600/loan' },
+              { label: 'Platform ACV', value: '$24–60K', note: '$2,000–$5,000/month per institution' },
+            ].map(s => (
+              <div key={s.label} className="p-4 rounded-xl" style={{ background: '#161616', border: '1px solid #1A1A1A' }}>
+                <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: '#555' }}>{s.label}</div>
+                <div className="text-base font-extrabold font-mono mb-1" style={{ color: '#00E599' }}>{s.value}</div>
+                <div className="text-[10px]" style={{ color: '#444' }}>{s.note}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Recent AI analysis */}
+        {recentAdvice && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="rounded-2xl p-6"
+            style={{ background: '#111', border: '1px solid #1A1A1A' }}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#00E599' }} />
+                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#555' }}>Recent AI Analysis</span>
+              </div>
+              <Link href="/advisor" className="text-xs font-semibold flex items-center gap-1 transition-opacity hover:opacity-70"
+                style={{ color: '#00E599' }}>
+                View conversation <ArrowRight size={11} />
+              </Link>
+            </div>
+            <p className="text-sm leading-relaxed line-clamp-4" style={{ color: '#888' }}>
+              {recentAdvice}
+            </p>
+            <div className="mt-4 px-4 py-2.5 rounded-xl text-xs" style={{ background: '#161616', color: '#444' }}>
+              For loan officer review only. All credit decisions remain with the loan officer. Not a credit opinion.
+            </div>
+          </motion.div>
+        )}
+
+        <div className="pb-4" />
+      </div>
     </div>
   );
 }

@@ -15,9 +15,12 @@
     "@21st-sdk/react": "^0.1.4",
     "@ai-sdk/react": "^3.0.169",
     "@anthropic-ai/sdk": "^0.27.0",
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.12.85",
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.0",
     "ai": "^6.0.167",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.8.0",
     "marked": "^14.1.2",
@@ -25,6 +28,7 @@
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^3.8.1",
+    "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
