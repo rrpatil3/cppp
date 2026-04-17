@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { Bell, Search } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 const PAGE_META: Record<string, { section: string; title: string }> = {
   '/':              { section: 'SBA Lender',    title: 'Underwriting Pipeline' },
@@ -67,8 +68,9 @@ export default function AppHeader() {
         </span>
       </div>
 
-      {/* Right: bell + search */}
+      {/* Right: theme toggle + bell + search */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+        <ThemeToggle />
         {/* Notification bell */}
         <button
           aria-label="Notifications"

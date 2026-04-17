@@ -53,6 +53,14 @@
   --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
+/* ── Lab background helper ── */
+.lab-bg::before {
+  overflow: hidden;
+  max-width: 100vw;
+  max-height: 100vh;
+  box-sizing: border-box;
+}
+
 /* ── Light mode overrides ── */
 html.light {
   --bg-base:     #F8FAFC;
