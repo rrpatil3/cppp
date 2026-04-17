@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Bell, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const PAGE_META: Record<string, { section: string; title: string }> = {
@@ -25,93 +25,79 @@ export default function AppHeader() {
   return (
     <header
       style={{
-        height: 80,
+        height: 60,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 2.5rem',
+        padding: '0 1.75rem',
         borderBottom: '1px solid var(--border)',
-        background: 'rgba(10,10,10,0.85)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        /* Premium glass — tinted, not pure dark */
+        background: 'rgba(9,13,22,0.88)',
+        backdropFilter: 'blur(28px)',
+        WebkitBackdropFilter: 'blur(28px)',
+        boxShadow: 'inset 0 -1px 0 rgba(255,255,255,0.04)',
         position: 'sticky',
         top: 0,
         zIndex: 10,
         flexShrink: 0,
       }}
     >
-      {/* Left: breadcrumb + page title */}
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {/* Left: breadcrumb — eyebrow + title */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
         {meta.section && (
           <span
             style={{
-              fontSize: '0.65rem',
-              fontWeight: 600,
-              letterSpacing: '0.12em',
+              fontSize: '0.58rem',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               color: 'var(--text-tertiary)',
-              marginBottom: '0.1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3em',
             }}
           >
-            {meta.section} / {meta.title}
+            {meta.section}
+            <span style={{ opacity: 0.4 }}>/</span>
+            <span style={{ color: 'var(--accent)', opacity: 0.9 }}>{meta.title}</span>
           </span>
         )}
         <span
           style={{
-            fontSize: '1.2rem',
-            fontWeight: 600,
+            fontSize: '0.95rem',
+            fontWeight: 700,
             color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.2,
           }}
         >
           {meta.title}
         </span>
       </div>
 
-      {/* Right: theme toggle + bell + search */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+      {/* Right: search + theme */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
         <ThemeToggle />
-        {/* Notification bell */}
-        <button
-          aria-label="Notifications"
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--text-secondary)',
-            cursor: 'pointer',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            padding: '0.25rem',
-          }}
-          className="header-icon-btn"
-        >
-          <Bell size={20} />
-          <span
-            style={{
-              position: 'absolute',
-              top: 2,
-              right: 2,
-              width: 7,
-              height: 7,
-              background: 'var(--green)',
-              borderRadius: '50%',
-              border: '2px solid var(--bg-base)',
-            }}
-          />
-        </button>
 
-        {/* Search */}
-        <div style={{ position: 'relative' }} className="header-search-wrap">
+        {/* Search — bezel pill */}
+        <div
+          style={{
+            position: 'relative',
+            padding: '1px',
+            borderRadius: 9999,
+            background: 'linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.01) 100%)',
+          }}
+        >
           <Search
-            size={15}
+            size={12}
             style={{
               position: 'absolute',
-              left: '0.75rem',
+              left: '0.8rem',
               top: '50%',
               transform: 'translateY(-50%)',
               color: 'var(--text-tertiary)',
               pointerEvents: 'none',
+              zIndex: 1,
             }}
           />
           <input
@@ -119,14 +105,16 @@ export default function AppHeader() {
             placeholder="Search"
             aria-label="Search"
             style={{
-              width: 220,
-              padding: '0.55rem 1rem 0.55rem 2.25rem',
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--border)',
+              width: 188,
+              padding: '0.42rem 1rem 0.42rem 2rem',
+              background: 'var(--bg-elevated)',
+              border: 'none',
               borderRadius: 9999,
               color: 'var(--text-primary)',
-              fontSize: '0.8rem',
+              fontSize: '0.76rem',
               outline: 'none',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+              transition: 'box-shadow 0.25s cubic-bezier(0.32,0.72,0,1)',
             }}
             className="header-search-input"
           />

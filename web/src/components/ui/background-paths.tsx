@@ -31,7 +31,7 @@ function FloatingPaths({ position }: { position: number }) {
 
 export function BackgroundPaths({ className = "" }: { className?: string }) {
   return (
-    <div className={`absolute inset-0 pointer-events-none text-[#00E599] ${className}`}>
+    <div className={`absolute inset-0 pointer-events-none text-[#4580F5] ${className}`}>
       <FloatingPaths position={1} />
       <FloatingPaths position={-1} />
     </div>

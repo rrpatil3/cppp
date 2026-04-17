@@ -8,18 +8,19 @@ export const dynamic = 'force-dynamic';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative', zIndex: 1 }}>
+      {/* Accent ambient glow */}
       <div className="ambient-glow" aria-hidden="true" />
 
-      {/* Sidebar */}
+      {/* Sidebar – desktop only */}
       <div className="hidden md:flex">
         <Nav />
       </div>
 
-      {/* Main content */}
+      {/* Main content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <AppHeader />
 
-        {/* Top glow */}
+        {/* Subtle top glow under header */}
         <div
           aria-hidden="true"
           style={{
@@ -27,16 +28,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             top: 0,
             left: '50%',
             transform: 'translateX(-50%)',
-            width: 800,
-            height: 100,
-            background: 'rgba(0,229,153,0.06)',
+            width: 900,
+            height: 120,
+            background: 'rgba(69,128,245,0.04)',
             filter: 'blur(80px)',
             pointerEvents: 'none',
             zIndex: 0,
           }}
         />
 
-        <main className="flex-1 overflow-y-auto pb-20 md:pb-0" style={{ position: 'relative', zIndex: 1 }}>
+        <main
+          className="flex-1 overflow-y-auto pb-20 md:pb-0"
+          style={{ position: 'relative', zIndex: 1 }}
+        >
           {children}
         </main>
       </div>
@@ -47,6 +51,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       <ScrollReveal />
+
+      {/* Fixed grain overlay — GPU-safe, pointer-events-none */}
+      <div className="grain-overlay" aria-hidden="true" />
     </div>
   );
 }

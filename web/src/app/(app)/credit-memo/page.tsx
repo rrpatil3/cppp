@@ -139,7 +139,7 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
       <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
         style={{ marginBottom: '1.25rem' }}>
         <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-3 text-[10px] font-bold uppercase tracking-widest"
-          style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.2)', color: '#00E599', borderRadius: 4 }}>
+          style={{ background: 'var(--accent-dim)', border: '1px solid var(--accent-border)', color: 'var(--accent)', borderRadius: 4 }}>
           AI · Credit Memo
         </div>
         <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '0.25rem', letterSpacing: '-0.03em' }}>

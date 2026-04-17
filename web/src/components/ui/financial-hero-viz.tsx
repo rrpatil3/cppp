@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { FileText } from 'lucide-react';
 
 const chips = [
-  { label: 'DSCR', value: '1.45×', color: '#00E599' },
+  { label: 'DSCR', value: '1.45×', color: '#34D399' },
   { label: 'Health', value: '87/100', color: '#3B82F6' },
   { label: 'Value', value: '$12.6M', color: '#8B5CF6' },
   { label: 'Revenue', value: '$4.2M', color: '#F59E0B' },
@@ -26,12 +26,12 @@ export function FinancialHeroViz() {
     <div className="relative select-none" style={{ width: 280, height: 280 }}>
       {/* Background glow */}
       <div className="absolute inset-0 rounded-full pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(0,229,153,0.08) 0%, transparent 65%)' }} />
+        style={{ background: 'radial-gradient(circle, rgba(69,128,245,0.08) 0%, transparent 65%)' }} />
 
       {/* Outer dashed ring — rotates clockwise */}
       <motion.div
         className="absolute rounded-full"
-        style={{ inset: 8, borderRadius: '50%', border: '1px dashed rgba(0,229,153,0.2)' }}
+        style={{ inset: 8, borderRadius: '50%', border: '1px dashed rgba(69,128,245,0.2)' }}
         animate={{ rotate: 360 }}
         transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
       />
@@ -39,7 +39,7 @@ export function FinancialHeroViz() {
       {/* Inner ring — counter-rotates */}
       <motion.div
         className="absolute rounded-full"
-        style={{ inset: 40, borderRadius: '50%', border: '1px solid rgba(0,229,153,0.10)' }}
+        style={{ inset: 40, borderRadius: '50%', border: '1px solid rgba(69,128,245,0.10)' }}
         animate={{ rotate: -360 }}
         transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
       />
@@ -48,18 +48,18 @@ export function FinancialHeroViz() {
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
           className="w-[72px] h-[72px] rounded-2xl flex items-center justify-center"
-          style={{ background: 'rgba(0,229,153,0.10)', border: '1.5px solid rgba(0,229,153,0.30)' }}
+          style={{ background: 'rgba(69,128,245,0.10)', border: '1.5px solid rgba(69,128,245,0.30)' }}
           animate={{
             boxShadow: [
-              '0 0 16px rgba(0,229,153,0.15)',
-              '0 0 32px rgba(0,229,153,0.30)',
-              '0 0 16px rgba(0,229,153,0.15)',
+              '0 0 16px rgba(69,128,245,0.15)',
+              '0 0 32px rgba(69,128,245,0.30)',
+              '0 0 16px rgba(69,128,245,0.15)',
             ],
             scale: [1, 1.04, 1],
           }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <FileText size={32} style={{ color: '#00E599' }} />
+          <FileText size={32} style={{ color: '#4580F5' }} />
         </motion.div>
       </div>
 
@@ -93,7 +93,7 @@ export function FinancialHeroViz() {
         <motion.div
           key={i}
           className="absolute w-2 h-2 rounded-full"
-          style={{ background: '#00E599', left: '50%', top: '50%', marginLeft: -4, marginTop: -4 }}
+          style={{ background: '#4580F5', left: '50%', top: '50%', marginLeft: -4, marginTop: -4 }}
           animate={{
             x: Array.from({ length: 37 }, (_, k) => {
               const rad = ((startDeg + k * 10) * Math.PI) / 180;

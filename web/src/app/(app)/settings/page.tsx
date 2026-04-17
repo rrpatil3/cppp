@@ -18,8 +18,8 @@ function Toggle({ label, desc, defaultChecked = false }: { label: string; desc?:
         aria-label={label}
         style={{
           position: 'relative', width: 46, height: 24, borderRadius: 9999,
-          border: `1px solid ${isOn ? 'var(--green)' : 'var(--border)'}`,
-          background: isOn ? 'rgba(0,229,153,0.15)' : 'var(--bg-base)',
+          border: `1px solid ${isOn ? 'var(--accent)' : 'var(--border)'}`,
+          background: isOn ? 'var(--accent-dim)' : 'var(--bg-base)',
           cursor: 'pointer', flexShrink: 0, transition: 'background 0.2s, border-color 0.2s',
         }}
       >
@@ -28,7 +28,7 @@ function Toggle({ label, desc, defaultChecked = false }: { label: string; desc?:
             position: 'absolute', top: 3,
             left: isOn ? 'calc(100% - 18px)' : 2,
             width: 16, height: 16, borderRadius: '50%',
-            background: isOn ? 'var(--green)' : 'var(--text-tertiary)',
+            background: isOn ? 'var(--accent)' : 'var(--text-tertiary)',
             transition: 'left 0.2s',
           }}
         />
@@ -129,7 +129,7 @@ export default function SettingsPage() {
                     textAlign: 'left', width: '100%', transition: 'background 0.15s, color 0.15s',
                   }}
                 >
-                  <Icon size={16} style={{ color: active ? 'var(--green)' : 'inherit' }} />
+                  <Icon size={16} style={{ color: active ? 'var(--accent)' : 'inherit' }} />
                   {tab.label}
                 </button>
               );
@@ -248,8 +248,8 @@ export default function SettingsPage() {
                     );
                   })}
                 </div>
-                <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(0,229,153,0.05)', border: '1px solid rgba(0,229,153,0.15)', borderRadius: 6, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                  <strong style={{ color: 'var(--green)' }}>Compliance budget (Year 1): ~$115,000.</strong> This is not optional — budget it before sales headcount. SOC 2 Type I is the minimum bar for any discovery call with a bank.
+                <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'var(--accent-dim)', border: '1px solid var(--accent-border)', borderRadius: 6, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  <strong style={{ color: 'var(--accent)' }}>Compliance budget (Year 1): ~$115,000.</strong> This is not optional — budget it before sales headcount. SOC 2 Type I is the minimum bar for any discovery call with a bank.
                 </div>
               </div>
             )}

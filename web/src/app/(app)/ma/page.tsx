@@ -111,9 +111,9 @@ export default function MAPage() {
         {SECTIONS.map(s => (
           <button key={s.id} onClick={() => setActiveSection(s.id)} style={{
             padding: '0.375rem 0.875rem', borderRadius: '9999px', border: '1px solid',
-            borderColor: activeSection === s.id ? 'var(--green)' : 'var(--border)',
-            background: activeSection === s.id ? 'var(--green-dim)' : 'transparent',
-            color: activeSection === s.id ? 'var(--green)' : 'var(--text-secondary)',
+            borderColor: activeSection === s.id ? 'var(--accent)' : 'var(--border)',
+            background: activeSection === s.id ? 'var(--accent-dim)' : 'transparent',
+            color: activeSection === s.id ? 'var(--accent)' : 'var(--text-secondary)',
             fontWeight: activeSection === s.id ? 600 : 400, fontSize: '0.8rem', cursor: 'pointer',
           }}>
             {s.label}
@@ -265,10 +265,10 @@ export default function MAPage() {
                   <span style={{ fontSize: '0.875rem' }}>{item}</span>
                   <div style={{
                     width: 20, height: 20, borderRadius: 3, border: '2px solid',
-                    borderColor: check?.is_complete ? 'var(--green)' : 'var(--border)',
-                    background: check?.is_complete ? 'var(--green)' : 'transparent',
+                    borderColor: check?.is_complete ? 'var(--accent)' : 'var(--border)',
+                    background: check?.is_complete ? 'var(--accent)' : 'transparent',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#000', fontSize: '0.7rem', fontWeight: 800,
+                    color: '#fff', fontSize: '0.7rem', fontWeight: 800,
                   }}>
                     {check?.is_complete ? '✓' : ''}
                   </div>

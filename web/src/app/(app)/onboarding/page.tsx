@@ -69,7 +69,7 @@ export default function OnboardingPage() {
       <div className="card" style={{ width: '100%', maxWidth: 520 }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
-            <div style={{ padding: '0.3rem 0.75rem', background: 'var(--green-dim)', borderRadius: 9999, fontSize: '0.65rem', fontWeight: 700, color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>SBA 7(a) Underwriting</div>
+            <div style={{ padding: '0.3rem 0.75rem', background: 'var(--accent-dim)', borderRadius: 9999, fontSize: '0.65rem', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>SBA 7(a) Underwriting</div>
           </div>
           <h1 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.375rem' }}>Add a Borrower Application</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Enter the borrower&apos;s financial data from their SBA 7(a) application. Spreading from uploaded docs coming Q2. Load a demo SBA borrower to see the platform in action.</p>

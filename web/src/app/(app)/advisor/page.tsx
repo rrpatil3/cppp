@@ -102,8 +102,8 @@ export default function AdvisorPage() {
       <div className="flex items-center gap-3 px-6 py-4 flex-shrink-0 relative z-10"
         style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
         <div className="w-9 h-9 flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(0,229,153,0.12)', border: '1px solid rgba(0,229,153,0.25)', borderRadius: 6 }}>
-          <Bot size={18} style={{ color: '#00E599' }} />
+          style={{ background: 'var(--accent-dim)', border: '1px solid var(--accent-border)', borderRadius: 6 }}>
+          <Bot size={18} style={{ color: 'var(--accent)' }} />
         </div>
         <div>
           <div className="font-black text-sm tracking-tight" style={{ color: 'var(--text-primary)' }}>
@@ -114,8 +114,8 @@ export default function AdvisorPage() {
           </div>
         </div>
         <div className="ml-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold"
-          style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.2)', color: '#00E599' }}>
-          <div className="w-1.5 h-1.5 rounded-full bg-[#00E599] animate-pulse" />
+          style={{ background: 'var(--accent-dim)', border: '1px solid var(--accent-border)', color: 'var(--accent)' }}>
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
           Live
         </div>
       </div>
@@ -129,8 +129,8 @@ export default function AdvisorPage() {
             className="max-w-lg mx-auto text-center pt-8"
           >
             <div className="w-16 h-16 rounded-2xl mx-auto mb-5 flex items-center justify-center"
-              style={{ background: 'rgba(0,229,153,0.1)', border: '1px solid rgba(0,229,153,0.25)' }}>
-              <Zap size={28} style={{ color: '#00E599' }} />
+              style={{ background: 'var(--accent-dim)', border: '1px solid var(--accent-border)' }}>
+              <Zap size={28} style={{ color: 'var(--accent)' }} />
             </div>
             <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
               {business ? `Analyzing ${business.business_name}` : 'Your AI Financial Advisor'}
@@ -161,15 +161,15 @@ export default function AdvisorPage() {
             >
               {msg.role === 'assistant' && (
                 <div className="w-7 h-7 rounded-lg flex-shrink-0 mb-0.5 flex items-center justify-center"
-                  style={{ background: '#00E599' }}>
-                  <Bot size={14} style={{ color: '#000' }} />
+                  style={{ background: 'var(--accent)', boxShadow: '0 2px 8px rgba(69,128,245,0.3)' }}>
+                  <Bot size={14} style={{ color: '#fff' }} />
                 </div>
               )}
               <div
                 className="max-w-[72%] px-4 py-3 text-sm leading-relaxed"
                 style={{
-                  background: msg.role === 'user' ? '#00E599' : 'var(--bg-surface)',
-                  color: msg.role === 'user' ? '#000' : 'var(--text-primary)',
+                  background: msg.role === 'user' ? 'var(--accent)' : 'var(--bg-surface)',
+                  color: msg.role === 'user' ? '#fff' : 'var(--text-primary)',
                   border: msg.role === 'assistant' ? '1px solid var(--border)' : 'none',
                   borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
                 }}
@@ -185,8 +185,8 @@ export default function AdvisorPage() {
         <AnimatePresence>
           {loading && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }} className="flex gap-3 items-end">
-              <div className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ background: '#00E599' }}>
-                <Bot size={14} style={{ color: '#000' }} />
+              <div className="w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ background: 'var(--accent)' }}>
+                <Bot size={14} style={{ color: '#fff' }} />
               </div>
               <div className="px-4 py-3 flex gap-1 items-center"
                 style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '18px 18px 18px 4px' }}>

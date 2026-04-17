@@ -19,15 +19,15 @@ interface NavProps {
 }
 
 const NAV_ITEMS = [
-  { label: 'Pipeline',       route: '/dashboard',    icon: LayoutDashboard, badge: null },
-  { label: 'Underwriting',   route: '/underwriting', icon: BarChart3,        badge: null },
-  { label: 'Credit Memo',    route: '/credit-memo',  icon: FileText,         badge: 'AI' },
-  { label: 'AI Advisor',     route: '/advisor',      icon: MessageSquare,    badge: 'AI' },
-  { label: 'M&A Suite',      route: '/ma',           icon: Briefcase,        badge: 'AI' },
-  { label: 'Due Diligence',  route: '/tools',        icon: ClipboardList,    badge: null },
+  { label: 'Pipeline',       route: '/dashboard',     icon: LayoutDashboard, badge: null },
+  { label: 'Underwriting',   route: '/underwriting',  icon: BarChart3,       badge: null },
+  { label: 'Credit Memo',    route: '/credit-memo',   icon: FileText,        badge: 'AI' },
+  { label: 'AI Advisor',     route: '/advisor',       icon: MessageSquare,   badge: 'AI' },
+  { label: 'M&A Suite',      route: '/ma',            icon: Briefcase,       badge: 'AI' },
+  { label: 'Due Diligence',  route: '/tools',         icon: ClipboardList,   badge: null },
   { label: 'Balance Sheet',  route: '/balance-sheet', icon: DollarSign,      badge: null },
-  { label: 'Cap Table',      route: '/ownership',    icon: Users,            badge: null },
-  { label: 'Settings',       route: '/settings',     icon: Settings,         badge: null },
+  { label: 'Cap Table',      route: '/ownership',     icon: Users,           badge: null },
+  { label: 'Settings',       route: '/settings',      icon: Settings,        badge: null },
 ];
 
 export default function Nav({ mobile = false }: NavProps) {
@@ -37,8 +37,10 @@ export default function Nav({ mobile = false }: NavProps) {
     return (
       <nav
         style={{
-          background: 'var(--bg-base)',
+          background: 'rgba(9,13,22,0.96)',
           borderTop: '1px solid var(--border)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-around',
@@ -59,16 +61,16 @@ export default function Nav({ mobile = false }: NavProps) {
                 gap: '0.2rem',
                 padding: '0.35rem 0.5rem',
                 borderRadius: '0.625rem',
-                color: active ? 'var(--green)' : 'var(--text-tertiary)',
-                background: active ? 'var(--green-dim)' : 'transparent',
+                color: active ? 'var(--accent)' : 'var(--text-tertiary)',
+                background: active ? 'var(--accent-dim)' : 'transparent',
                 textDecoration: 'none',
                 fontSize: '0.6rem',
                 fontWeight: 600,
                 minWidth: 44,
-                transition: 'color 0.2s, background 0.2s',
+                transition: 'color 0.2s cubic-bezier(0.22,1,0.36,1), background 0.2s cubic-bezier(0.22,1,0.36,1)',
               }}
             >
-              <Icon size={18} />
+              <Icon size={18} strokeWidth={active ? 2.5 : 1.75} />
               {item.label}
             </Link>
           );
@@ -89,52 +91,71 @@ export default function Nav({ mobile = false }: NavProps) {
         flexShrink: 0,
       }}
     >
-      {/* Logo */}
+      {/* Wordmark – no logo icon */}
       <div
         style={{
-          height: 80,
+          height: 72,
           display: 'flex',
           alignItems: 'center',
-          padding: '0 2rem',
+          padding: '0 1.75rem',
           borderBottom: '1px solid var(--border)',
           flexShrink: 0,
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div>
           <div
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: '50%',
-              background: 'var(--green)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 0 20px rgba(0,229,153,0.3)',
-              flexShrink: 0,
+              fontWeight: 800,
+              fontSize: '1.05rem',
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.1,
             }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M4 14L10 2L20 14" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M14 22L8 10L12 10" stroke="#000" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            CapTable
+            <span style={{ color: 'var(--accent)', marginLeft: 2 }}>AI</span>
           </div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>CapTable AI</div>
-            <div style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', fontWeight: 500 }}>SBA Lender Platform</div>
+          <div
+            style={{
+              fontSize: '0.6rem',
+              color: 'var(--text-tertiary)',
+              fontWeight: 500,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              marginTop: 2,
+            }}
+          >
+            SBA Lender Platform
           </div>
         </div>
       </div>
 
       {/* Section label */}
-      <div style={{ padding: '1.5rem 1.5rem 0.5rem' }}>
-        <span style={{ fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>
+      <div style={{ padding: '1.25rem 1.5rem 0.4rem' }}>
+        <span
+          style={{
+            fontSize: '0.6rem',
+            fontWeight: 700,
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--text-tertiary)',
+          }}
+        >
           Loan Officer Tools
         </span>
       </div>
 
       {/* Nav items */}
-      <div style={{ flex: 1, padding: '0.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', overflowY: 'auto' }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '0.25rem 0.875rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.125rem',
+          overflowY: 'auto',
+        }}
+      >
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.route;
           const Icon = item.icon;
@@ -147,37 +168,60 @@ export default function Nav({ mobile = false }: NavProps) {
                 position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.75rem 1rem',
-                borderRadius: '0.75rem',
-                color: active ? '#ffffff' : 'var(--text-secondary)',
+                gap: '0.625rem',
+                padding: '0.65rem 0.875rem',
+                borderRadius: '0.625rem',
+                color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
                 textDecoration: 'none',
-                fontSize: '0.875rem',
-                fontWeight: active ? 500 : 400,
+                fontSize: '0.85rem',
+                fontWeight: active ? 600 : 400,
                 background: active ? 'var(--bg-elevated)' : 'transparent',
                 border: active ? '1px solid var(--border)' : '1px solid transparent',
-                transition: 'color 0.2s, background 0.2s',
+                boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,0.07)' : 'none',
+                transition: 'all 0.3s cubic-bezier(0.32,0.72,0,1)',
               }}
               className="nav-item-link"
             >
+              {/* Active left accent bar */}
+              {active && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    width: 3,
+                    height: '55%',
+                    borderRadius: '0 2px 2px 0',
+                    background: 'var(--accent)',
+                  }}
+                />
+              )}
+
               <Icon
-                size={17}
-                strokeWidth={active ? 2.5 : 2}
-                style={{ color: active ? 'var(--green)' : 'inherit', flexShrink: 0, transition: 'color 0.2s' }}
+                size={16}
+                strokeWidth={active ? 2.5 : 1.75}
+                style={{
+                  color: active ? 'var(--accent)' : 'inherit',
+                  flexShrink: 0,
+                  transition: 'color 0.2s ease',
+                }}
               />
               <span>{item.label}</span>
+
               {item.badge && (
                 <span
                   style={{
                     marginLeft: 'auto',
-                    fontSize: '0.6rem',
+                    fontSize: '0.58rem',
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '0.08em',
-                    background: 'var(--green-dim)',
-                    color: 'var(--green)',
-                    padding: '0.15rem 0.5rem',
+                    background: 'var(--accent-dim)',
+                    color: 'var(--accent)',
+                    padding: '0.12rem 0.45rem',
                     borderRadius: 9999,
+                    border: '1px solid var(--accent-border)',
                   }}
                 >
                   {item.badge}
@@ -188,21 +232,36 @@ export default function Nav({ mobile = false }: NavProps) {
         })}
       </div>
 
-      {/* Footer — SBA compliance note */}
-      <div style={{ padding: '1.5rem 1rem', flexShrink: 0 }}>
+      {/* Footer */}
+      <div style={{ padding: '1.25rem 0.875rem', flexShrink: 0 }}>
         <div
+          className="footer-card-hover"
           style={{
-            padding: '1rem',
-            borderRadius: '1rem',
+            padding: '0.875rem',
+            borderRadius: '0.75rem',
             background: 'var(--bg-surface)',
             border: '1px solid var(--border)',
+            transition: 'border-color 0.2s ease',
           }}
         >
-          <p style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.25rem' }}>
+          <p
+            style={{
+              fontSize: '0.68rem',
+              fontWeight: 600,
+              color: 'var(--text-secondary)',
+              marginBottom: '0.2rem',
+            }}
+          >
             Analytical Support Only
           </p>
-          <p style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', lineHeight: 1.5 }}>
-            All outputs require loan officer review. Not a credit decision tool. Pre-seed · Seeking $1.5M.
+          <p
+            style={{
+              fontSize: '0.62rem',
+              color: 'var(--text-tertiary)',
+              lineHeight: 1.5,
+            }}
+          >
+            All outputs require loan officer review. Not a credit decision tool.
           </p>
         </div>
       </div>

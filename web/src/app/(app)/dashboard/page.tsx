@@ -38,46 +38,46 @@ interface PageData {
 }
 
 const workflowItems = [
-  { label: 'Run DSCR & SBA Ratios', sub: 'Global cash flow · Leverage · Collateral', href: '/underwriting', step: '1', icon: TrendingUp, color: '#00E599' },
-  { label: 'Generate Credit Memo', sub: 'AI-drafted SBA 7(a) credit memo', href: '/credit-memo', step: '2', icon: FileText, color: '#3B82F6' },
+  { label: 'Run DSCR & SBA Ratios', sub: 'Global cash flow · Leverage · Collateral', href: '/underwriting', step: '1', icon: TrendingUp, color: '#4580F5' },
+  { label: 'Generate Credit Memo', sub: 'AI-drafted SBA 7(a) credit memo', href: '/credit-memo', step: '2', icon: FileText, color: '#34D399' },
   { label: 'Due Diligence Checklist', sub: '12-category DD assessment · Valuation', href: '/tools', step: '3', icon: CheckSquare, color: '#8B5CF6' },
   { label: 'Ask AI Underwriter', sub: 'Structured Q&A on borrower financials', href: '/advisor', step: '4', icon: MessageSquare, color: '#F59E0B' },
   { label: 'M&A Suite & CIM', sub: 'Valuation · Buyer discovery · CIM gen', href: '/ma', step: '5', icon: BarChart2, color: '#EC4899' },
-  { label: 'Balance Sheet & Cap Table', sub: 'Asset/liability spreading · Ownership', href: '/balance-sheet', step: '6', icon: PieChart, color: '#10B981' },
+  { label: 'Balance Sheet & Cap Table', sub: 'Asset/liability spreading · Ownership', href: '/balance-sheet', step: '6', icon: PieChart, color: '#3D7EF5' },
 ];
 
 // ── Financial mini-dashboard shown inside the scroll animation ──
 function MiniDashboard() {
   const bars = [58, 74, 63, 88, 71, 95, 82];
   return (
-    <div className="w-full h-full flex flex-col" style={{ background: '#0A0A0A', fontFamily: 'Inter, sans-serif' }}>
+    <div className="w-full h-full flex flex-col" style={{ background: '#090D16', fontFamily: 'var(--font-body, system-ui)' }}>
       {/* Top bar */}
-      <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: '1px solid #1A1A1A' }}>
+      <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: '1px solid #1C2840' }}>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full" style={{ background: '#00E599' }} />
-          <span className="text-xs font-bold" style={{ color: '#fff' }}>CapTable AI</span>
-          <span className="text-[10px]" style={{ color: '#555' }}>· SBA 7(a) Underwriting</span>
+          <div className="w-2 h-2 rounded-full" style={{ background: '#4580F5' }} />
+          <span className="text-xs font-bold" style={{ color: '#DDE5F4' }}>CapTable AI</span>
+          <span className="text-[10px]" style={{ color: '#4A5970' }}>· SBA 7(a) Underwriting</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(0,229,153,0.1)', color: '#00E599', border: '1px solid rgba(0,229,153,0.2)' }}>
+          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(69,128,245,0.1)', color: '#4580F5', border: '1px solid rgba(69,128,245,0.25)' }}>
             Active Analysis
           </span>
-          <Activity size={12} style={{ color: '#555' }} />
+          <Activity size={12} style={{ color: '#4A5970' }} />
         </div>
       </div>
 
       {/* KPI row */}
       <div className="grid grid-cols-4 gap-2 p-3">
         {[
-          { l: 'Health Score', v: '87/100', c: '#00E599', sub: 'Excellent' },
-          { l: 'Annual Revenue', v: '$4.2M', c: '#fff', sub: 'FY 2023' },
-          { l: 'DSCR Ratio', v: '1.45×', c: '#00E599', sub: 'SBA Qualified' },
-          { l: 'Est. Valuation', v: '$12.6M', c: '#fff', sub: 'Blended 3.0×' },
+          { l: 'Health Score', v: '87/100', c: '#34D399', sub: 'Excellent' },
+          { l: 'Annual Revenue', v: '$4.2M', c: '#DDE5F4', sub: 'FY 2023' },
+          { l: 'DSCR Ratio', v: '1.45×', c: '#34D399', sub: 'SBA Qualified' },
+          { l: 'Est. Valuation', v: '$12.6M', c: '#DDE5F4', sub: 'Blended 3.0×' },
         ].map(k => (
-          <div key={k.l} className="rounded p-2.5" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
-            <div className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: '#555' }}>{k.l}</div>
+          <div key={k.l} className="rounded p-2.5" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
+            <div className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: '#4A5970' }}>{k.l}</div>
             <div className="text-sm font-extrabold" style={{ color: k.c, fontFamily: 'ui-monospace, monospace' }}>{k.v}</div>
-            <div className="text-[8px] mt-0.5" style={{ color: '#444' }}>{k.sub}</div>
+            <div className="text-[8px] mt-0.5" style={{ color: '#4A5970' }}>{k.sub}</div>
           </div>
         ))}
       </div>
@@ -85,50 +85,50 @@ function MiniDashboard() {
       {/* Chart + Workflow */}
       <div className="flex gap-2 px-3 pb-3 flex-1 min-h-0">
         {/* Revenue bar chart */}
-        <div className="flex-1 rounded p-3 flex flex-col min-h-0" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
+        <div className="flex-1 rounded p-3 flex flex-col min-h-0" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: '#555' }}>Revenue vs Liabilities (Q1–Q4)</span>
-            <span className="text-[8px]" style={{ color: '#00E599' }}>↑ 18% YoY</span>
+            <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: '#4A5970' }}>Revenue vs Liabilities (Q1–Q4)</span>
+            <span className="text-[8px]" style={{ color: '#34D399' }}>↑ 18% YoY</span>
           </div>
           <div className="flex items-end gap-1.5 flex-1">
             {bars.map((h, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                <div className="w-full rounded-sm" style={{ height: `${h}%`, background: i % 2 === 0 ? '#00E599' : '#1E1E1E', opacity: i % 2 === 0 ? 0.85 : 1, transition: 'height 0.6s ease' }} />
-                <span className="text-[6px]" style={{ color: '#333' }}>Q{Math.ceil((i + 1) / 2)}</span>
+                <div className="w-full rounded-sm" style={{ height: `${h}%`, background: i % 2 === 0 ? '#4580F5' : '#16202E', opacity: i % 2 === 0 ? 0.85 : 1, transition: 'height 0.6s ease' }} />
+                <span className="text-[6px]" style={{ color: '#263652' }}>Q{Math.ceil((i + 1) / 2)}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Risk flags panel */}
-        <div className="w-44 rounded p-3 flex flex-col" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
-          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555' }}>Underwriting Flags</div>
+        <div className="w-44 rounded p-3 flex flex-col" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
+          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#4A5970' }}>Underwriting Flags</div>
           {[
-            { l: 'DSCR Check', s: 'Pass', c: '#00E599' },
-            { l: 'Collateral', s: 'Pass', c: '#00E599' },
-            { l: 'Equity Inject.', s: 'Review', c: '#F59E0B' },
-            { l: 'Credit History', s: 'Pass', c: '#00E599' },
-            { l: 'Ownership Docs', s: 'Pending', c: '#555' },
+            { l: 'DSCR Check',     s: 'Pass',    c: '#34D399' },
+            { l: 'Collateral',     s: 'Pass',    c: '#34D399' },
+            { l: 'Equity Inject.', s: 'Review',  c: '#F59E0B' },
+            { l: 'Credit History', s: 'Pass',    c: '#34D399' },
+            { l: 'Ownership Docs', s: 'Pending', c: '#4A5970' },
           ].map(w => (
-            <div key={w.l} className="flex items-center justify-between py-1" style={{ borderBottom: '1px solid #1A1A1A' }}>
-              <span className="text-[8px]" style={{ color: '#888' }}>{w.l}</span>
+            <div key={w.l} className="flex items-center justify-between py-1" style={{ borderBottom: '1px solid #1C2840' }}>
+              <span className="text-[8px]" style={{ color: '#8595B0' }}>{w.l}</span>
               <span className="text-[8px] font-bold" style={{ color: w.c }}>{w.s}</span>
             </div>
           ))}
         </div>
 
         {/* Workflow steps */}
-        <div className="w-40 rounded p-3 flex flex-col" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
-          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555' }}>Analysis Workflow</div>
+        <div className="w-40 rounded p-3 flex flex-col" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
+          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#4A5970' }}>Analysis Workflow</div>
           {[
-            { l: 'DSCR & Ratios', s: 'Done', c: '#00E599', n: '1' },
-            { l: 'Credit Memo', s: 'Active', c: '#3B82F6', n: '2' },
-            { l: 'DD Checklist', s: 'Next', c: '#8B5CF6', n: '3' },
-            { l: 'AI Advisor', s: 'Queue', c: '#555', n: '4' },
+            { l: 'DSCR & Ratios', s: 'Done',   c: '#34D399', n: '1' },
+            { l: 'Credit Memo',   s: 'Active',  c: '#4580F5', n: '2' },
+            { l: 'DD Checklist',  s: 'Next',    c: '#8B5CF6', n: '3' },
+            { l: 'AI Advisor',    s: 'Queue',   c: '#4A5970', n: '4' },
           ].map(w => (
-            <div key={w.l} className="flex items-center gap-1.5 py-1.5" style={{ borderBottom: '1px solid #1A1A1A' }}>
+            <div key={w.l} className="flex items-center gap-1.5 py-1.5" style={{ borderBottom: '1px solid #1C2840' }}>
               <span className="text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: `${w.c}18`, color: w.c, border: `1px solid ${w.c}30` }}>{w.n}</span>
-              <span className="text-[8px] flex-1" style={{ color: '#888' }}>{w.l}</span>
+              <span className="text-[8px] flex-1" style={{ color: '#8595B0' }}>{w.l}</span>
               <span className="text-[7px] font-bold" style={{ color: w.c }}>{w.s}</span>
             </div>
           ))}
@@ -136,15 +136,15 @@ function MiniDashboard() {
       </div>
 
       {/* Bottom status bar */}
-      <div className="flex items-center gap-3 px-4 py-2" style={{ borderTop: '1px solid #1A1A1A' }}>
+      <div className="flex items-center gap-3 px-4 py-2" style={{ borderTop: '1px solid #1C2840' }}>
         <div className="flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#00E599' }} />
-          <span className="text-[8px]" style={{ color: '#555' }}>AI analysis running · 4 of 6 steps complete</span>
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#4580F5' }} />
+          <span className="text-[8px]" style={{ color: '#4A5970' }}>AI analysis running · 4 of 6 steps complete</span>
         </div>
-        <div className="flex-1 h-0.5 rounded-full" style={{ background: '#1A1A1A' }}>
-          <div className="h-full rounded-full" style={{ width: '67%', background: '#00E599' }} />
+        <div className="flex-1 h-0.5 rounded-full" style={{ background: '#1C2840' }}>
+          <div className="h-full rounded-full" style={{ width: '67%', background: '#4580F5' }} />
         </div>
-        <span className="text-[8px] font-mono font-bold" style={{ color: '#00E599' }}>67%</span>
+        <span className="text-[8px] font-mono font-bold" style={{ color: '#4580F5' }}>67%</span>
       </div>
     </div>
   );
@@ -209,14 +209,14 @@ export default function PipelineDashboard() {
             className="flex-1 flex flex-col items-center md:items-start text-center md:text-left"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-semibold tracking-widest uppercase"
-              style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.20)', color: '#00E599' }}>
+              style={{ background: 'rgba(69,128,245,0.08)', border: '1px solid rgba(69,128,245,0.22)', color: '#4580F5' }}>
               <Zap size={11} />
               SBA 7(a) AI Underwriting Platform
             </div>
 
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4"
               style={{
-                background: 'linear-gradient(to bottom, #ffffff 30%, #444444)',
+                background: 'linear-gradient(to bottom, #DDE5F4 30%, #4A5970)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 letterSpacing: '-0.03em',
@@ -224,20 +224,20 @@ export default function PipelineDashboard() {
               AI Financial<br />Intelligence
             </h1>
 
-            <p className="text-sm leading-relaxed mb-7 max-w-md" style={{ color: '#666' }}>
+            <p className="text-sm leading-relaxed mb-7 max-w-md" style={{ color: '#8595B0' }}>
               Reduces 4–8 hours of manual analyst work to under 30 minutes per SBA 7(a) application.
               Analytical support only — credit decisions remain with the loan officer.
             </p>
 
             <div className="flex gap-3 mb-10">
               <Link href="/underwriting"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:opacity-90"
-                style={{ background: '#00E599', color: '#000' }}>
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+                style={{ background: '#4580F5', color: '#fff', boxShadow: '0 2px 12px rgba(69,128,245,0.3)' }}>
                 Start Analysis <ArrowRight size={14} />
               </Link>
               <Link href="/advisor"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 hover:opacity-80"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid #333', color: '#fff' }}>
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid #1C2840', color: '#DDE5F4' }}>
                 Ask AI <ChevronRight size={14} />
               </Link>
             </div>
@@ -250,9 +250,9 @@ export default function PipelineDashboard() {
                 { icon: Zap, label: 'Target PLPs', value: '140' },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="text-center">
-                  <Icon size={12} className="mx-auto mb-1" style={{ color: '#444' }} />
-                  <div className="text-xl font-extrabold font-mono" style={{ color: '#00E599' }}>{value}</div>
-                  <div className="text-[9px] uppercase tracking-widest font-semibold mt-0.5" style={{ color: '#444' }}>{label}</div>
+                  <Icon size={12} className="mx-auto mb-1" style={{ color: '#4A5970' }} />
+                  <div className="text-xl font-extrabold font-mono" style={{ color: '#4580F5' }}>{value}</div>
+                  <div className="text-[9px] uppercase tracking-widest font-semibold mt-0.5" style={{ color: '#4A5970' }}>{label}</div>
                 </div>
               ))}
             </div>
@@ -280,12 +280,12 @@ export default function PipelineDashboard() {
               transition={{ duration: 0.6 }}
               className="flex flex-col items-center"
             >
-              <span className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: '#00E599' }}>
+              <span className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: '#4580F5' }}>
                 Platform Preview
               </span>
               <h2 className="text-3xl md:text-5xl font-bold mb-3" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
                 Complete SBA 7(a) analysis<br />
-                <span style={{ color: '#00E599' }}>in under 30 minutes</span>
+                <span style={{ color: '#4580F5' }}>in under 30 minutes</span>
               </h2>
               <p className="text-sm max-w-xl" style={{ color: 'var(--text-secondary)' }}>
                 From DSCR ratios and credit memos to due diligence checklists — everything a loan officer needs in one unified platform.
@@ -321,7 +321,7 @@ export default function PipelineDashboard() {
   const equity = assets - liabilities;
   const redFlags = detectRedFlags(b.business, liabilities, equity);
   const deRatio = equity > 0 ? liabilities / equity : 0;
-  const scoreColor = b.healthScore >= 70 ? '#00E599' : b.healthScore >= 45 ? '#F59E0B' : '#FF4444';
+  const scoreColor = b.healthScore >= 70 ? '#34D399' : b.healthScore >= 45 ? '#F59E0B' : '#EF4444';
 
   return (
     <div style={{ background: 'var(--bg-base)', position: 'relative' }}>
@@ -342,15 +342,15 @@ export default function PipelineDashboard() {
           className="relative overflow-hidden"
           style={{ background: '#050505', border: '1px solid #1a1a1a', borderRadius: 6, height: 380 }}
         >
-          <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgba(0,229,153,0.15)" />
+          <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgba(69,128,245,0.12)" />
           <div className="flex h-full">
             <div className="flex-1 p-8 relative z-10 flex flex-col justify-center">
               <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-5 text-[10px] font-bold uppercase tracking-widest"
-                style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.2)', color: '#00E599', borderRadius: 4 }}>
+                style={{ background: 'rgba(69,128,245,0.08)', border: '1px solid rgba(69,128,245,0.22)', color: '#4580F5', borderRadius: 4 }}>
                 <Zap size={9} /> Live Platform
               </div>
               <h2 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-4"
-                style={{ background: 'linear-gradient(to bottom, #fff 40%, #444)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                style={{ background: 'linear-gradient(to bottom, #DDE5F4 40%, #4A5970)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 <WaveText text="SBA 7(a)" />
                 <br />
                 <WaveText text="Intelligence" />
@@ -361,7 +361,7 @@ export default function PipelineDashboard() {
               <div className="flex gap-3 mt-6">
                 <Link href="/underwriting"
                   className="inline-flex items-center gap-2 px-5 py-2.5 font-bold text-sm transition-all active:scale-[0.98]"
-                  style={{ background: '#00E599', color: '#000', borderRadius: 4 }}>
+                  style={{ background: '#4580F5', color: '#fff', borderRadius: 4, boxShadow: '0 2px 12px rgba(69,128,245,0.3)' }}>
                   Start Analysis <ArrowRight size={13} />
                 </Link>
               </div>
@@ -405,30 +405,31 @@ export default function PipelineDashboard() {
           ].map((m, i) => (
             <motion.div
               key={m.label}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 16, filter: 'blur(5px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.06, duration: 0.4 }}
-              className="relative overflow-hidden rounded p-5"
-              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
+              transition={{ delay: i * 0.07, duration: 0.55, ease: [0.22,1,0.36,1] }}
+              className="card-bezel"
             >
-              <Spotlight size={200} fill="rgba(0,229,153,0.08)" />
-              <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-tertiary)' }}>{m.label}</div>
-              <div className="text-2xl font-extrabold font-mono" style={{ color: 'var(--text-primary)' }}>{m.value}</div>
-              {m.sub && <div className="text-xs mt-1" style={{ color: 'var(--text-tertiary)' }}>{m.sub}</div>}
+              <div className="card relative overflow-hidden">
+                <Spotlight size={200} fill="rgba(69,128,245,0.06)" />
+                <div className="text-[9px] font-bold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--text-tertiary)' }}>{m.label}</div>
+                <div className="text-2xl font-extrabold font-mono" style={{ color: 'var(--text-primary)' }}>{m.value}</div>
+                {m.sub && <div className="text-[11px] mt-1" style={{ color: 'var(--text-tertiary)' }}>{m.sub}</div>}
+              </div>
             </motion.div>
           ))}
         </motion.div>
 
         {/* Active borrower card */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded p-6"
-          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
+          transition={{ duration: 0.6, ease: [0.22,1,0.36,1] }}
+          className="card-bezel"
         >
+        <div className="card relative overflow-hidden" style={{ padding: '1.5rem' }}>
           <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-5"
             style={{ background: `radial-gradient(circle, ${scoreColor} 0%, transparent 70%)` }} />
 
@@ -468,6 +469,7 @@ export default function PipelineDashboard() {
               </div>
             ))}
           </div>
+        </div>
         </motion.div>
 
         {/* Risk flags */}
@@ -503,52 +505,109 @@ export default function PipelineDashboard() {
           </motion.div>
         )}
 
-        {/* Workflow grid */}
+        {/* Workflow — Asymmetric Bento */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="mb-4">
-            <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-tertiary)' }}>Loan Officer Workflow</div>
-            <div className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)', opacity: 0.7 }}>
-              Complete a full SBA 7(a) underwriting analysis in under 30 minutes
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="eyebrow mb-1.5">Loan Officer Workflow</div>
+              <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+                Complete a full SBA 7(a) analysis in under 30 minutes
+              </div>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+
+          {/* Asymmetric bento: [wide] [narrow] / [narrow] [narrow] [narrow] / [wide] */}
+          <div
+            className="grid gap-2.5"
+            style={{
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateRows: 'auto auto',
+            }}
+          >
             {workflowItems.map((item, i) => {
               const Icon = item.icon;
+              const isWide = i === 0 || i === 5;
               return (
                 <motion.div
                   key={item.href}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  className="workflow-card"
+                  initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
+                  whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.05, duration: 0.4 }}
-                  whileHover={{ y: -2 }}
+                  transition={{
+                    delay: i * 0.06,
+                    duration: 0.5,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  style={isWide ? { gridColumn: 'span 2' } : {}}
                 >
-                  <Link
-                    href={item.href}
-                    className="group flex items-center gap-4 p-4 rounded-xl transition-colors duration-200 block"
-                    style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}
-                  >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
-                      style={{ background: `${item.color}12`, border: `1px solid ${item.color}25` }}>
-                      <Icon size={18} style={{ color: item.color }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold rounded-full px-1.5 py-0.5"
-                          style={{ background: 'var(--bg-elevated)', color: item.color, border: `1px solid ${item.color}25` }}>
-                          {item.step}
-                        </span>
-                        <span className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{item.label}</span>
+                  <Link href={item.href} className="block h-full" style={{ textDecoration: 'none' }}>
+                    <div className="workflow-card-inner group flex items-center gap-3.5">
+                      {/* Icon shell — outer ring */}
+                      <div
+                        className="flex-shrink-0 rounded-xl flex items-center justify-center"
+                        style={{
+                          width: 40,
+                          height: 40,
+                          background: `${item.color}10`,
+                          border: `1px solid ${item.color}22`,
+                          boxShadow: `inset 0 1px 0 ${item.color}18`,
+                        }}
+                      >
+                        <Icon size={16} strokeWidth={1.75} style={{ color: item.color }} />
                       </div>
-                      <div className="text-xs mt-0.5 truncate" style={{ color: 'var(--text-tertiary)' }}>{item.sub}</div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span
+                            className="text-[9px] font-bold rounded-full px-1.5 py-0.5 flex-shrink-0"
+                            style={{
+                              background: `${item.color}12`,
+                              color: item.color,
+                              border: `1px solid ${item.color}22`,
+                            }}
+                          >
+                            {item.step}
+                          </span>
+                          <span
+                            className="text-sm font-semibold truncate"
+                            style={{ color: 'var(--text-primary)' }}
+                          >
+                            {item.label}
+                          </span>
+                        </div>
+                        <div
+                          className="text-[11px] truncate"
+                          style={{ color: 'var(--text-tertiary)' }}
+                        >
+                          {item.sub}
+                        </div>
+                      </div>
+
+                      {/* Button-in-button trailing icon */}
+                      <div
+                        className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
+                        style={{
+                          background: 'var(--bg-elevated)',
+                          border: '1px solid var(--border)',
+                          transitionTimingFunction: 'cubic-bezier(0.32,0.72,0,1)',
+                        }}
+                      >
+                        <ArrowRight
+                          size={11}
+                          className="transition-transform duration-300 group-hover:translate-x-0.5"
+                          style={{
+                            color: 'var(--text-tertiary)',
+                            transitionTimingFunction: 'cubic-bezier(0.32,0.72,0,1)',
+                          }}
+                        />
+                      </div>
                     </div>
-                    <ArrowRight size={14} className="flex-shrink-0 transition-transform duration-150 group-hover:translate-x-1"
-                      style={{ color: 'var(--text-tertiary)' }} />
                   </Link>
                 </motion.div>
               );
@@ -575,7 +634,7 @@ export default function PipelineDashboard() {
             ].map(s => (
               <div key={s.label} className="p-4 rounded-xl" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)' }}>
                 <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-tertiary)' }}>{s.label}</div>
-                <div className="text-base font-extrabold font-mono mb-1" style={{ color: '#00E599' }}>{s.value}</div>
+                <div className="text-base font-extrabold font-mono mb-1" style={{ color: 'var(--accent)' }}>{s.value}</div>
                 <div className="text-[10px]" style={{ color: 'var(--text-tertiary)' }}>{s.note}</div>
               </div>
             ))}
@@ -594,11 +653,11 @@ export default function PipelineDashboard() {
           >
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#00E599' }} />
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
                 <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-tertiary)' }}>Recent AI Analysis</span>
               </div>
               <Link href="/advisor" className="text-xs font-semibold flex items-center gap-1 transition-opacity hover:opacity-70"
-                style={{ color: '#00E599' }}>
+                style={{ color: 'var(--accent)' }}>
                 View conversation <ArrowRight size={11} />
               </Link>
             </div>

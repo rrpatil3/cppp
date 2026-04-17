@@ -94,9 +94,9 @@ function ToolsContent() {
         {TOOLS.map(t => (
           <button key={t.key} onClick={() => router.push(`/tools?tool=${t.key}`)} style={{
             padding: '0.35rem 0.875rem', borderRadius: '9999px', border: '1px solid',
-            borderColor: activeTool === t.key ? 'var(--green)' : 'var(--border)',
-            background: activeTool === t.key ? 'var(--green-dim)' : 'transparent',
-            color: activeTool === t.key ? 'var(--green)' : 'var(--text-secondary)',
+            borderColor: activeTool === t.key ? 'var(--accent)' : 'var(--border)',
+            background: activeTool === t.key ? 'var(--accent-dim)' : 'transparent',
+            color: activeTool === t.key ? 'var(--accent)' : 'var(--text-secondary)',
             fontWeight: activeTool === t.key ? 600 : 400, fontSize: '0.8rem', cursor: 'pointer',
           }}>
             {t.label}

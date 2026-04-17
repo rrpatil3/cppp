@@ -132,7 +132,7 @@ export function AnimatedAIChat({
   return (
     <div className="w-full relative">
       <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
-        <div className="absolute top-0 left-1/4 w-72 h-72 bg-[#00E599]/5 rounded-full filter blur-[100px] animate-pulse" />
+        <div className="absolute top-0 left-1/4 w-72 h-72 rounded-full filter blur-[100px] animate-pulse" style={{ background: 'rgba(69,128,245,0.05)' }} />
         <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-violet-500/5 rounded-full filter blur-[100px] animate-pulse" style={{ animationDelay: '700ms' }} />
       </div>
 
@@ -216,9 +216,9 @@ export function AnimatedAIChat({
             disabled={loading || !value.trim()}
             className={cn(
               'px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2',
-              value.trim() && !loading ? 'bg-[#00E599] text-black shadow-lg shadow-[#00E599]/20' : 'text-white/30'
+              value.trim() && !loading ? 'text-white shadow-lg' : 'text-white/30'
             )}
-            style={{ background: value.trim() && !loading ? '#00E599' : 'rgba(255,255,255,0.05)' }}
+            style={{ background: value.trim() && !loading ? 'var(--accent)' : 'rgba(255,255,255,0.05)' }}
           >
             {loading ? <LoaderIcon className="w-4 h-4 animate-spin" /> : <SendIcon className="w-4 h-4" />}
             <span>Send</span>
@@ -253,7 +253,7 @@ export function AnimatedAIChat({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
           >
-            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: '#00E599', color: '#000' }}>CT</div>
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold" style={{ background: 'var(--accent)', color: '#fff' }}>CT</div>
             <span className="text-xs text-white/60">Analyzing</span>
             <TypingDots />
           </motion.div>
@@ -270,7 +270,7 @@ function TypingDots() {
         <motion.div
           key={i}
           className="w-1.5 h-1.5 rounded-full"
-          style={{ background: '#00E599' }}
+          style={{ background: 'var(--accent)' }}
           animate={{ opacity: [0.3, 1, 0.3], scale: [0.8, 1.1, 0.8] }}
           transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2, ease: 'easeInOut' }}
         />
