@@ -94,7 +94,7 @@ export default function OwnershipPage() {
     return (
       <div className="page-content">
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {[1,2,3].map(i => <div key={i} className="skeleton" style={{ height: 80, borderRadius: '1rem' }} />)}
+          {[1,2,3].map(i => <div key={i} className="skeleton" style={{ height: 80, borderRadius: 6 }} />)}
         </div>
       </div>
     );

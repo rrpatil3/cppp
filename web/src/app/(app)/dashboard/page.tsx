@@ -19,6 +19,9 @@ import { LampContainer } from '@/components/ui/lamp';
 import { ContainerScroll } from '@/components/ui/container-scroll-animation';
 import { Spotlight } from '@/components/ui/spotlight';
 import { FinancialHeroViz } from '@/components/ui/financial-hero-viz';
+import { SplineScene } from '@/components/ui/splite';
+import { BackgroundPaths } from '@/components/ui/background-paths';
+import { WaveText } from '@/components/ui/wave-text';
 
 interface BorrowerCard {
   business: Business;
@@ -71,7 +74,7 @@ function MiniDashboard() {
           { l: 'DSCR Ratio', v: '1.45×', c: '#00E599', sub: 'SBA Qualified' },
           { l: 'Est. Valuation', v: '$12.6M', c: '#fff', sub: 'Blended 3.0×' },
         ].map(k => (
-          <div key={k.l} className="rounded-xl p-2.5" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
+          <div key={k.l} className="rounded p-2.5" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
             <div className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: '#555' }}>{k.l}</div>
             <div className="text-sm font-extrabold" style={{ color: k.c, fontFamily: 'ui-monospace, monospace' }}>{k.v}</div>
             <div className="text-[8px] mt-0.5" style={{ color: '#444' }}>{k.sub}</div>
@@ -82,7 +85,7 @@ function MiniDashboard() {
       {/* Chart + Workflow */}
       <div className="flex gap-2 px-3 pb-3 flex-1 min-h-0">
         {/* Revenue bar chart */}
-        <div className="flex-1 rounded-xl p-3 flex flex-col min-h-0" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
+        <div className="flex-1 rounded p-3 flex flex-col min-h-0" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: '#555' }}>Revenue vs Liabilities (Q1–Q4)</span>
             <span className="text-[8px]" style={{ color: '#00E599' }}>↑ 18% YoY</span>
@@ -98,7 +101,7 @@ function MiniDashboard() {
         </div>
 
         {/* Risk flags panel */}
-        <div className="w-44 rounded-xl p-3 flex flex-col" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
+        <div className="w-44 rounded p-3 flex flex-col" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
           <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555' }}>Underwriting Flags</div>
           {[
             { l: 'DSCR Check', s: 'Pass', c: '#00E599' },
@@ -115,7 +118,7 @@ function MiniDashboard() {
         </div>
 
         {/* Workflow steps */}
-        <div className="w-40 rounded-xl p-3 flex flex-col" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
+        <div className="w-40 rounded p-3 flex flex-col" style={{ background: '#111', border: '1px solid #1A1A1A' }}>
           <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555' }}>Analysis Workflow</div>
           {[
             { l: 'DSCR & Ratios', s: 'Done', c: '#00E599', n: '1' },
@@ -302,7 +305,7 @@ export default function PipelineDashboard() {
         {hero}
         <div className="px-6 md:px-10 py-8 max-w-6xl mx-auto space-y-4" style={{ background: 'var(--bg-base)' }}>
           {[80, 240, 80, 180].map((h, i) => (
-            <div key={i} className="skeleton rounded-2xl" style={{ height: h }} />
+            <div key={i} className="skeleton rounded" style={{ height: h }} />
           ))}
         </div>
       </>
@@ -321,8 +324,57 @@ export default function PipelineDashboard() {
   const scoreColor = b.healthScore >= 70 ? '#00E599' : b.healthScore >= 45 ? '#F59E0B' : '#FF4444';
 
   return (
-    <div style={{ background: 'var(--bg-base)' }}>
+    <div style={{ background: 'var(--bg-base)', position: 'relative' }}>
+      {/* subtle bg paths */}
+      <div className="opacity-[0.04] pointer-events-none fixed inset-0 z-0">
+        <BackgroundPaths />
+      </div>
+
       {hero}
+
+      {/* ── SplineScene Hero Card ── */}
+      <div className="px-6 md:px-10 pt-6 max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="relative overflow-hidden"
+          style={{ background: '#050505', border: '1px solid #1a1a1a', borderRadius: 6, height: 380 }}
+        >
+          <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgba(0,229,153,0.15)" />
+          <div className="flex h-full">
+            <div className="flex-1 p-8 relative z-10 flex flex-col justify-center">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-5 text-[10px] font-bold uppercase tracking-widest"
+                style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.2)', color: '#00E599', borderRadius: 4 }}>
+                <Zap size={9} /> Live Platform
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-4"
+                style={{ background: 'linear-gradient(to bottom, #fff 40%, #444)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                <WaveText text="SBA 7(a)" />
+                <br />
+                <WaveText text="Intelligence" />
+              </h2>
+              <p className="text-sm leading-relaxed max-w-xs" style={{ color: '#666' }}>
+                AI-powered underwriting. From borrower intake to credit memo in under 30 minutes.
+              </p>
+              <div className="flex gap-3 mt-6">
+                <Link href="/underwriting"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 font-bold text-sm transition-all active:scale-[0.98]"
+                  style={{ background: '#00E599', color: '#000', borderRadius: 4 }}>
+                  Start Analysis <ArrowRight size={13} />
+                </Link>
+              </div>
+            </div>
+            <div className="flex-1 relative hidden md:block">
+              <SplineScene
+                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+        </motion.div>
+      </div>
 
       {/* ── SECTION 3: Live Dashboard Data ── */}
       <div className="px-6 md:px-10 py-10 max-w-6xl mx-auto space-y-5">
@@ -330,9 +382,9 @@ export default function PipelineDashboard() {
         {/* Section divider */}
         <div className="flex items-center gap-4 mb-2">
           <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-          <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full"
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-tertiary)' }}>
-            Live Borrower Data
+          <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1"
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-tertiary)', borderRadius: 4 }}>
+            <WaveText text="Live Borrower Data" />
           </span>
           <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
         </div>
@@ -357,7 +409,7 @@ export default function PipelineDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06, duration: 0.4 }}
-              className="relative overflow-hidden rounded-xl p-5"
+              className="relative overflow-hidden rounded p-5"
               style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
             >
               <Spotlight size={200} fill="rgba(0,229,153,0.08)" />
@@ -374,7 +426,7 @@ export default function PipelineDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-xl p-6"
+          className="relative overflow-hidden rounded p-6"
           style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
         >
           <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-5"
@@ -425,7 +477,7 @@ export default function PipelineDashboard() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-xl p-6"
+            className="rounded p-6"
             style={{ background: 'rgba(255,68,68,0.04)', border: '1px solid rgba(255,68,68,0.15)' }}
           >
             <div className="flex items-center gap-2 mb-4">
@@ -510,7 +562,7 @@ export default function PipelineDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="rounded-xl p-6"
+          className="rounded p-6"
           style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
         >
           <div className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: 'var(--text-tertiary)' }}>Unit Economics at a Glance</div>
@@ -537,7 +589,7 @@ export default function PipelineDashboard() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-xl p-6"
+            className="rounded p-6"
             style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
           >
             <div className="flex justify-between items-center mb-4">

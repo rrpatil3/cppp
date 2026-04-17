@@ -7,6 +7,8 @@ import { marked } from 'marked';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AnimatedAIChat } from '@/components/ui/animated-ai-chat';
 import { Zap, Bot } from 'lucide-react';
+import { BackgroundPaths } from '@/components/ui/background-paths';
+import { WaveText } from '@/components/ui/wave-text';
 
 const SUGGESTED = [
   'What are the key DSCR risks for this borrower?',
@@ -93,17 +95,20 @@ export default function AdvisorPage() {
   }
 
   return (
-    <div className="flex flex-col" style={{ height: '100%', background: 'var(--bg-base)' }}>
+    <div className="flex flex-col" style={{ height: '100%', background: 'var(--bg-base)', position: 'relative' }}>
+      <div className="opacity-[0.035] pointer-events-none fixed inset-0 z-0"><BackgroundPaths /></div>
 
       {/* Page header */}
-      <div className="flex items-center gap-3 px-6 py-4 flex-shrink-0"
+      <div className="flex items-center gap-3 px-6 py-4 flex-shrink-0 relative z-10"
         style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
-        <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{ background: 'rgba(0,229,153,0.12)', border: '1px solid rgba(0,229,153,0.25)' }}>
+        <div className="w-9 h-9 flex items-center justify-center flex-shrink-0"
+          style={{ background: 'rgba(0,229,153,0.12)', border: '1px solid rgba(0,229,153,0.25)', borderRadius: 6 }}>
           <Bot size={18} style={{ color: '#00E599' }} />
         </div>
         <div>
-          <div className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>AI Underwriter Advisor</div>
+          <div className="font-black text-sm tracking-tight" style={{ color: 'var(--text-primary)' }}>
+            <WaveText text="AI Underwriter Advisor" />
+          </div>
           <div className="text-[11px]" style={{ color: 'var(--text-tertiary)' }}>
             Powered by Claude · SBA 7(a) financial intelligence
           </div>

@@ -78,7 +78,7 @@ export default function BalanceSheetPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1rem', background: 'var(--bg-elevated)', padding: '0.25rem', borderRadius: '0.5rem', width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1rem', background: 'var(--bg-elevated)', padding: '0.25rem', borderRadius: 4, width: 'fit-content' }}>
         {(['ASSET', 'LIABILITY'] as const).map(t => (
           <button key={t} onClick={() => { setTab(t); setForm(f => ({ ...f, type: t })); }} style={{
             padding: '0.375rem 1rem', borderRadius: '0.35rem', border: 'none', cursor: 'pointer',

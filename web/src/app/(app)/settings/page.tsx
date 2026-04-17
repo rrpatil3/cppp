@@ -93,7 +93,7 @@ export default function SettingsPage() {
   if (!business) {
     return (
       <div className="page-content">
-        <div className="skeleton" style={{ height: 300, borderRadius: '1rem' }} />
+        <div className="skeleton" style={{ height: 300, borderRadius: 6 }} />
       </div>
     );
   }
@@ -121,7 +121,7 @@ export default function SettingsPage() {
                   onClick={() => setActiveTab(i)}
                   style={{
                     display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    padding: '0.75rem 1rem', borderRadius: '0.75rem',
+                    padding: '0.75rem 1rem', borderRadius: 6,
                     fontSize: '0.875rem', fontWeight: active ? 500 : 400, cursor: 'pointer',
                     border: active ? '1px solid var(--border)' : '1px solid transparent',
                     background: active ? 'var(--bg-elevated)' : 'transparent',
@@ -217,7 +217,7 @@ export default function SettingsPage() {
                   {COMPLIANCE_ITEMS.map(item => {
                     const status = complianceStatus[item.label] || 'not-started';
                     return (
-                      <div key={item.label} style={{ padding: '1rem', background: 'var(--bg-elevated)', borderRadius: '0.75rem', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                      <div key={item.label} style={{ padding: '1rem', background: 'var(--bg-elevated)', borderRadius: 6, border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
                         <div style={{ flex: 1 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '0.2rem' }}>
                             <span style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>{item.label}</span>
@@ -248,7 +248,7 @@ export default function SettingsPage() {
                     );
                   })}
                 </div>
-                <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(0,229,153,0.05)', border: '1px solid rgba(0,229,153,0.15)', borderRadius: '0.75rem', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <div style={{ marginTop: '1.25rem', padding: '0.75rem 1rem', background: 'rgba(0,229,153,0.05)', border: '1px solid rgba(0,229,153,0.15)', borderRadius: 6, fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                   <strong style={{ color: 'var(--green)' }}>Compliance budget (Year 1): ~$115,000.</strong> This is not optional — budget it before sales headcount. SOC 2 Type I is the minimum bar for any discovery call with a bank.
                 </div>
               </div>
@@ -286,7 +286,7 @@ export default function SettingsPage() {
                   </button>
                 </div>
 
-                <div style={{ padding: '1rem', background: 'var(--bg-elevated)', borderRadius: '0.75rem', border: '1px solid var(--border)', marginBottom: '1rem' }}>
+                <div style={{ padding: '1rem', background: 'var(--bg-elevated)', borderRadius: 6, border: '1px solid var(--border)', marginBottom: '1rem' }}>
                   <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>AI Cost Estimate</div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     {[

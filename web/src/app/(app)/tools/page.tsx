@@ -323,7 +323,7 @@ function ToolsContent() {
           <div style={{ fontWeight: 700, marginBottom: '0.875rem', fontSize: '1rem' }}>Comparable Transactions (2022–2024)</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {COMPARABLE_TRANSACTIONS.map((t, i) => (
-              <div key={i} style={{ background: 'var(--bg-elevated)', borderRadius: '0.5rem', padding: '0.875rem', border: '1px solid var(--border-subtle)' }}>
+              <div key={i} style={{ background: 'var(--bg-elevated)', borderRadius: 4, padding: '0.875rem', border: '1px solid var(--border-subtle)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
                   <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{t.industry}</div>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
@@ -366,7 +366,7 @@ function ToolsContent() {
                   </div>
                 ))}
                 {ratio && (
-                  <div style={{ marginTop: '0.875rem', padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                  <div style={{ marginTop: '0.875rem', padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: 4, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                     {ratio >= 3 ? 'Strong coverage. Lenders and buyers will view this positively.' : ratio >= 1.5 ? 'Adequate coverage, but limited buffer. Watch in a downturn.' : 'Thin coverage. High risk — consider reducing debt before a sale.'}
                   </div>
                 )}

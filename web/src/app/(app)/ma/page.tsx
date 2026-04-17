@@ -264,7 +264,7 @@ export default function MAPage() {
                 <div key={item} className="data-row" style={{ cursor: 'pointer' }} onClick={() => toggleDD(item)}>
                   <span style={{ fontSize: '0.875rem' }}>{item}</span>
                   <div style={{
-                    width: 20, height: 20, borderRadius: '0.25rem', border: '2px solid',
+                    width: 20, height: 20, borderRadius: 3, border: '2px solid',
                     borderColor: check?.is_complete ? 'var(--green)' : 'var(--border)',
                     background: check?.is_complete ? 'var(--green)' : 'transparent',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',

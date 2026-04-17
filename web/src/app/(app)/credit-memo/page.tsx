@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { formatCurrency } from '@/lib/calculator';
 import type { Business, BalanceSheetItem } from '@/lib/types';
+import { motion } from 'framer-motion';
+import { BackgroundPaths } from '@/components/ui/background-paths';
+import { WaveText } from '@/components/ui/wave-text';
 
 interface MemoForm {
   loanAmount: string;
@@ -121,7 +124,7 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
   if (loading) {
     return (
       <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {[80, 200, 160].map((h, i) => <div key={i} className="skeleton" style={{ height: h, borderRadius: '1rem' }} />)}
+        {[80, 200, 160].map((h, i) => <div key={i} className="skeleton" style={{ height: h, borderRadius: 6 }} />)}
       </div>
     );
   }
@@ -129,16 +132,23 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
   if (!business) return null;
 
   return (
-    <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ position: 'relative', background: 'var(--bg-base)', minHeight: '100%' }}>
+      <div className="opacity-[0.035] pointer-events-none fixed inset-0 z-0"><BackgroundPaths /></div>
+      <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
       {/* Header */}
-      <div style={{ marginBottom: '1.25rem' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
-          Credit Memo Generator
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+        style={{ marginBottom: '1.25rem' }}>
+        <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-3 text-[10px] font-bold uppercase tracking-widest"
+          style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.2)', color: '#00E599', borderRadius: 4 }}>
+          AI · Credit Memo
+        </div>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '0.25rem', letterSpacing: '-0.03em' }}>
+          <WaveText text="Credit Memo Generator" />
         </h1>
         <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
           {business.business_name} · AI-drafted SBA credit memo · Requires loan officer review
         </p>
-      </div>
+      </motion.div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '380px 1fr', gap: '1rem' }}>
         {/* Input panel */}
@@ -146,7 +156,7 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
           <div className="stripe-row-title" style={{ marginBottom: '1rem' }}>Loan Details</div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            <div style={{ padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: 4, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               <strong>{business.business_name}</strong> · {business.industry || 'Industry N/A'}
               <br />{formatCurrency(business.annual_revenue)} revenue · {formatCurrency(business.net_income)} net income
             </div>
@@ -164,7 +174,7 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
                   placeholder={f.placeholder}
                   value={form[f.key]}
                   onChange={e => setForm(frm => ({ ...frm, [f.key]: e.target.value }))}
-                  style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '0.5rem', padding: '0.625rem 0.875rem', fontSize: '0.875rem', color: 'var(--text-primary)', outline: 'none' }}
+                  style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 4, padding: '0.625rem 0.875rem', fontSize: '0.875rem', color: 'var(--text-primary)', outline: 'none' }}
                 />
               </div>
             ))}
@@ -180,13 +190,13 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
                   value={form[f.key]}
                   onChange={e => setForm(frm => ({ ...frm, [f.key]: e.target.value }))}
                   rows={3}
-                  style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: '0.5rem', padding: '0.625rem 0.875rem', fontSize: '0.875rem', color: 'var(--text-primary)', outline: 'none', resize: 'vertical', fontFamily: 'inherit' }}
+                  style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 4, padding: '0.625rem 0.875rem', fontSize: '0.875rem', color: 'var(--text-primary)', outline: 'none', resize: 'vertical', fontFamily: 'inherit' }}
                 />
               </div>
             ))}
 
             {error && (
-              <div style={{ padding: '0.75rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '0.5rem', fontSize: '0.8rem', color: 'var(--red)' }}>
+              <div style={{ padding: '0.75rem', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 4, fontSize: '0.8rem', color: 'var(--red)' }}>
                 {error}
               </div>
             )}
@@ -222,7 +232,7 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
                 style={{
                   padding: '1.25rem',
                   background: 'var(--bg-elevated)',
-                  borderRadius: '0.75rem',
+                  borderRadius: 6,
                   fontSize: '0.8rem',
                   color: 'var(--text-secondary)',
                   lineHeight: 1.7,
@@ -234,7 +244,7 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
               >
                 {memo}
               </div>
-              <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '0.5rem', fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>
+              <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 4, fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>
                 <strong style={{ color: 'var(--text-secondary)' }}>Important:</strong> This AI-generated credit memo is analytical support only. It must be reviewed, verified, and approved by the loan officer before inclusion in any SBA credit file. It does not constitute a credit decision or credit opinion.
               </div>
             </div>
@@ -247,13 +257,14 @@ Include a prominent disclaimer at the top and bottom that this is analytical sup
                   Fill in the loan details on the left, then click &ldquo;Generate Credit Memo&rdquo; to create an SBA-formatted credit memo draft.
                 </p>
               </div>
-              <div style={{ padding: '0.75rem 1rem', background: 'var(--bg-elevated)', borderRadius: '0.75rem', fontSize: '0.75rem', color: 'var(--text-tertiary)', maxWidth: 360, textAlign: 'center' }}>
+              <div style={{ padding: '0.75rem 1rem', background: 'var(--bg-elevated)', borderRadius: 6, fontSize: '0.75rem', color: 'var(--text-tertiary)', maxWidth: 360, textAlign: 'center' }}>
                 Generates: Executive Summary · Financial Analysis · DSCR · Credit Strengths & Risks · Recommendation
               </div>
             </div>
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }

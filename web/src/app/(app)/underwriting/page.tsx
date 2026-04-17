@@ -8,6 +8,9 @@ import {
 } from '@/lib/calculator';
 import type { Business, DSCRData, DSCRResult } from '@/lib/types';
 import CounterNumber from '@/components/CounterNumber';
+import { motion } from 'framer-motion';
+import { BackgroundPaths } from '@/components/ui/background-paths';
+import { WaveText } from '@/components/ui/wave-text';
 
 interface DSCRForm {
   proposedDebtService: string;
@@ -84,7 +87,7 @@ export default function UnderwritingPage() {
           style={{
             background: 'var(--bg-elevated)',
             border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
+            borderRadius: 4,
             padding: '0.625rem 0.875rem',
             fontSize: '0.875rem',
             color: 'var(--text-primary)',
@@ -99,7 +102,7 @@ export default function UnderwritingPage() {
   if (loading) {
     return (
       <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {[80, 200, 160].map((h, i) => <div key={i} className="skeleton" style={{ height: h, borderRadius: '1rem' }} />)}
+        {[80, 200, 160].map((h, i) => <div key={i} className="skeleton" style={{ height: h, borderRadius: 6 }} />)}
       </div>
     );
   }
@@ -109,17 +112,25 @@ export default function UnderwritingPage() {
   const valuation = computeValuationRangeForSBA(business.annual_revenue, business.ebit, business.industry || '');
 
   return (
-    <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto' }}>
+    <div style={{ position: 'relative', background: 'var(--bg-base)', minHeight: '100%' }}>
+      <div className="opacity-[0.035] pointer-events-none fixed inset-0 z-0"><BackgroundPaths /></div>
+
+      <div style={{ padding: '1.5rem', maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
       {/* Header */}
-      <div style={{ marginBottom: '1.25rem' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
-          SBA Underwriting Analysis
+      <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+        style={{ marginBottom: '1.25rem' }}>
+        <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-3 text-[10px] font-bold uppercase tracking-widest"
+          style={{ background: 'rgba(0,229,153,0.08)', border: '1px solid rgba(0,229,153,0.2)', color: '#00E599', borderRadius: 4 }}>
+          SBA Analysis
+        </div>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '0.25rem', letterSpacing: '-0.03em' }}>
+          <WaveText text="SBA Underwriting Analysis" />
         </h1>
         <p style={{ fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
           {business.business_name} · DSCR · Global Cash Flow · SBA Ratios
         </p>
-      </div>
+      </motion.div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
 
@@ -127,7 +138,7 @@ export default function UnderwritingPage() {
         <div className="card">
           <div className="stripe-row-title" style={{ marginBottom: '1rem' }}>Debt Service & Add-Back Inputs</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            <div style={{ padding: '0.75rem', background: 'var(--bg-elevated)', borderRadius: 4, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
               <strong>Borrower NOI (from business profile):</strong> {formatCurrency(business.net_income)}
             </div>
             {field('proposedDebtService', 'Proposed Annual Debt Service ($)')}
@@ -232,7 +243,7 @@ export default function UnderwritingPage() {
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
               {valuation.label} · {valuation.method}
             </div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', padding: '0.5rem 0.75rem', background: 'var(--bg-elevated)', borderRadius: '0.5rem' }}>
+            <div style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', padding: '0.5rem 0.75rem', background: 'var(--bg-elevated)', borderRadius: 4 }}>
               For loan officer reference only. Independent appraisal required for SBA loan files.
             </div>
           </div>
@@ -240,9 +251,10 @@ export default function UnderwritingPage() {
       </div>
 
       {/* Disclaimer */}
-      <div style={{ padding: '0.875rem 1rem', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '0.75rem', fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
+      <div style={{ padding: '0.875rem 1rem', background: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: 6, fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
         <strong style={{ color: 'var(--text-secondary)' }}>Analytical Support Only:</strong> All DSCR calculations and ratio analyses generated by this tool require loan officer review and verification before inclusion in the credit file. This tool does not constitute a credit opinion or lending recommendation.
       </div>
+    </div>
     </div>
   );
 }
