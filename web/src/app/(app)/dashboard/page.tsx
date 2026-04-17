@@ -22,6 +22,8 @@ import { FinancialHeroViz } from '@/components/ui/financial-hero-viz';
 import { SplineScene } from '@/components/ui/splite';
 import { BackgroundPaths } from '@/components/ui/background-paths';
 import { WaveText } from '@/components/ui/wave-text';
+import SpotlightCard from '@/components/ui/SpotlightCard';
+import LiveKPIStream from '@/components/ui/LiveKPIStream';
 
 interface BorrowerCard {
   business: Business;
