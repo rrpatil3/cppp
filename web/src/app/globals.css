@@ -53,6 +53,40 @@
   --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
+/* ── Light mode overrides ── */
+html.light {
+  --bg-base:     #F8FAFC;
+  --bg-surface:  #FFFFFF;
+  --bg-elevated: #F1F5F9;
+  --bg-overlay:  #E2E8F0;
+  --text-primary:   #0F172A;
+  --text-secondary: #475569;
+  --text-tertiary:  #94A3B8;
+  --border:        #E2E8F0;
+  --border-subtle: #F8FAFC;
+  --border-strong: #CBD5E1;
+  --green-dim:    rgba(0,229,153,0.10);
+  --green-border: rgba(0,229,153,0.25);
+  --red-dim:    rgba(220,38,38,0.08);
+  --red-border: rgba(220,38,38,0.20);
+  --gold-dim:    rgba(217,119,6,0.08);
+  --gold-border: rgba(217,119,6,0.20);
+}
+
+html.light body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+html.light header {
+  background: rgba(248,250,252,0.90) !important;
+  border-color: var(--border) !important;
+}
+
+html.light .ambient-glow {
+  background: radial-gradient(ellipse, rgba(0,229,153,0.04) 0%, transparent 70%);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
