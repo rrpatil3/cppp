@@ -357,8 +357,8 @@ export default function PipelineDashboard() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06, duration: 0.4 }}
-              className="relative overflow-hidden rounded-2xl p-5"
-              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
+              className="relative overflow-hidden rounded-xl p-5"
+              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
             >
               <Spotlight size={200} fill="rgba(0,229,153,0.08)" />
               <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-tertiary)' }}>{m.label}</div>
@@ -374,8 +374,8 @@ export default function PipelineDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden rounded-2xl p-6"
-          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
+          className="relative overflow-hidden rounded-xl p-6"
+          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
         >
           <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-5"
             style={{ background: `radial-gradient(circle, ${scoreColor} 0%, transparent 70%)` }} />
@@ -425,7 +425,7 @@ export default function PipelineDashboard() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-2xl p-6"
+            className="rounded-xl p-6"
             style={{ background: 'rgba(255,68,68,0.04)', border: '1px solid rgba(255,68,68,0.15)' }}
           >
             <div className="flex items-center gap-2 mb-4">
@@ -478,8 +478,8 @@ export default function PipelineDashboard() {
                 >
                   <Link
                     href={item.href}
-                    className="group flex items-center gap-4 p-4 rounded-2xl transition-colors duration-200 block"
-                    style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
+                    className="group flex items-center gap-4 p-4 rounded-xl transition-colors duration-200 block"
+                    style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}
                   >
                     <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
                       style={{ background: `${item.color}12`, border: `1px solid ${item.color}25` }}>
@@ -510,8 +510,8 @@ export default function PipelineDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="rounded-2xl p-6"
-          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
+          className="rounded-xl p-6"
+          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
         >
           <div className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: 'var(--text-tertiary)' }}>Unit Economics at a Glance</div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -537,8 +537,8 @@ export default function PipelineDashboard() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="rounded-2xl p-6"
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
+            className="rounded-xl p-6"
+            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
           >
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">

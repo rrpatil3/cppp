@@ -61,18 +61,18 @@
   box-sizing: border-box;
 }
 
-/* ── Light mode overrides ── */
+/* ── Light mode overrides (Stripe palette) ── */
 html.light {
-  --bg-base:     #F8FAFC;
+  --bg-base:     #F6F9FC;
   --bg-surface:  #FFFFFF;
-  --bg-elevated: #F1F5F9;
-  --bg-overlay:  #E2E8F0;
-  --text-primary:   #0F172A;
-  --text-secondary: #475569;
-  --text-tertiary:  #94A3B8;
-  --border:        #E2E8F0;
-  --border-subtle: #F8FAFC;
-  --border-strong: #CBD5E1;
+  --bg-elevated: #F0F4F8;
+  --bg-overlay:  #E3E8EF;
+  --text-primary:   #0A2540;
+  --text-secondary: #425466;
+  --text-tertiary:  #8898AA;
+  --border:        #E3E8EF;
+  --border-subtle: #EEF2F7;
+  --border-strong: #C4CDD6;
   --green-dim:    rgba(0,229,153,0.10);
   --green-border: rgba(0,229,153,0.25);
   --red-dim:    rgba(220,38,38,0.08);
@@ -117,8 +117,9 @@ body {
   .card {
     background: var(--bg-surface);
     border: 1px solid var(--border);
-    border-radius: 1rem;
+    border-radius: 0.75rem;
     padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
 
   .card-inner {
