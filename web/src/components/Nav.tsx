@@ -19,7 +19,7 @@ interface NavProps {
 }
 
 const NAV_ITEMS = [
-  { label: 'Pipeline',       route: '/',             icon: LayoutDashboard, badge: null },
+  { label: 'Pipeline',       route: '/dashboard',    icon: LayoutDashboard, badge: null },
   { label: 'Underwriting',   route: '/underwriting', icon: BarChart3,        badge: null },
   { label: 'Credit Memo',    route: '/credit-memo',  icon: FileText,         badge: 'AI' },
   { label: 'AI Advisor',     route: '/advisor',      icon: MessageSquare,    badge: 'AI' },

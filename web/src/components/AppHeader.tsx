@@ -5,7 +5,7 @@ import { Bell, Search } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const PAGE_META: Record<string, { section: string; title: string }> = {
-  '/':              { section: 'SBA Lender',    title: 'Underwriting Pipeline' },
+  '/dashboard':     { section: 'SBA Lender',    title: 'Underwriting Pipeline' },
   '/underwriting':  { section: 'SBA Analysis',  title: 'DSCR & SBA Ratios' },
   '/credit-memo':   { section: 'AI',            title: 'Credit Memo Generator' },
   '/advisor':       { section: 'AI',            title: 'AI Underwriter Advisor' },

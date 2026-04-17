@@ -48,8 +48,8 @@
   --sidebar-width: 280px;
 
   /* Typography */
-  --font-display: 'Inter', sans-serif;
-  --font-body:    'Inter', sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  --font-body:    'Plus Jakarta Sans', 'Inter', sans-serif;
   --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
 }
 
@@ -99,6 +99,11 @@ html.light .ambient-glow {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+@keyframes moveBackground {
+  from { background-position: 0% 0%; }
+  to { background-position: 0% -1000%; }
 }
 
 html {
