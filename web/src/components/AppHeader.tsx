@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import { Search } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
 
 const PAGE_META: Record<string, { section: string; title: string }> = {
   '/dashboard':     { section: 'SBA Lender',    title: 'Underwriting Pipeline' },
@@ -30,62 +29,69 @@ export default function AppHeader() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 1.75rem',
-        borderBottom: '1px solid var(--border)',
-        /* Premium glass — tinted, not pure dark */
-        background: 'rgba(9,13,22,0.88)',
+        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(5,5,5,0.92)',
         backdropFilter: 'blur(28px)',
         WebkitBackdropFilter: 'blur(28px)',
-        boxShadow: 'inset 0 -1px 0 rgba(255,255,255,0.04)',
         position: 'sticky',
         top: 0,
         zIndex: 10,
         flexShrink: 0,
       }}
     >
-      {/* Left: breadcrumb — eyebrow + title */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      {/* Left: breadcrumb */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {meta.section && (
           <span
             style={{
-              fontSize: '0.58rem',
+              fontSize: '0.55rem',
               fontWeight: 700,
-              letterSpacing: '0.14em',
+              letterSpacing: '0.16em',
               textTransform: 'uppercase',
-              color: 'var(--text-tertiary)',
+              color: '#333333',
               display: 'flex',
               alignItems: 'center',
               gap: '0.3em',
+              fontFamily: 'Aspekta, system-ui, sans-serif',
             }}
           >
             {meta.section}
             <span style={{ opacity: 0.4 }}>/</span>
-            <span style={{ color: 'var(--accent)', opacity: 0.9 }}>{meta.title}</span>
+            <span
+              style={{
+                background: 'linear-gradient(to right, #06B6D4, #EC4899)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              {meta.title}
+            </span>
           </span>
         )}
         <span
           style={{
-            fontSize: '0.95rem',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.025em',
+            fontSize: '0.9rem',
+            fontWeight: 900,
+            color: '#ffffff',
+            letterSpacing: '-0.02em',
             lineHeight: 1.2,
+            textTransform: 'uppercase',
+            fontFamily: 'Aspekta, system-ui, sans-serif',
           }}
         >
           {meta.title}
         </span>
       </div>
 
-      {/* Right: search + theme */}
+      {/* Right: search */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-        <ThemeToggle />
-
-        {/* Search — bezel pill */}
         <div
           style={{
             position: 'relative',
             padding: '1px',
             borderRadius: 9999,
-            background: 'linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.01) 100%)',
+            background: 'rgba(255,255,255,0.06)',
           }}
         >
           <Search
@@ -95,7 +101,7 @@ export default function AppHeader() {
               left: '0.8rem',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: 'var(--text-tertiary)',
+              color: '#555555',
               pointerEvents: 'none',
               zIndex: 1,
             }}
@@ -107,14 +113,15 @@ export default function AppHeader() {
             style={{
               width: 188,
               padding: '0.42rem 1rem 0.42rem 2rem',
-              background: 'var(--bg-elevated)',
-              border: 'none',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 9999,
-              color: 'var(--text-primary)',
+              color: '#ffffff',
               fontSize: '0.76rem',
               outline: 'none',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
-              transition: 'box-shadow 0.25s cubic-bezier(0.32,0.72,0,1)',
+              backdropFilter: 'blur(8px)',
+              fontFamily: 'Aspekta, system-ui, sans-serif',
+              transition: 'border-color 0.2s ease',
             }}
             className="header-search-input"
           />

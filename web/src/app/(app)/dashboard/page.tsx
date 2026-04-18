@@ -52,19 +52,19 @@ const workflowItems = [
 function MiniDashboard() {
   const bars = [58, 74, 63, 88, 71, 95, 82];
   return (
-    <div className="w-full h-full flex flex-col" style={{ background: '#090D16', fontFamily: 'var(--font-body, system-ui)' }}>
+    <div className="w-full h-full flex flex-col" style={{ background: '#050505', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
       {/* Top bar */}
-      <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: '1px solid #1C2840' }}>
+      <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full" style={{ background: '#4580F5' }} />
-          <span className="text-xs font-bold" style={{ color: '#DDE5F4' }}>CapTable AI</span>
-          <span className="text-[10px]" style={{ color: '#4A5970' }}>· SBA 7(a) Underwriting</span>
+          <div className="w-2 h-2 rounded-full animate-live-pulse" style={{ background: '#ef4444' }} />
+          <span className="text-xs font-bold uppercase" style={{ color: '#ffffff', letterSpacing: '0.06em' }}>CapTable AI</span>
+          <span className="text-[10px]" style={{ color: '#555555' }}>· SBA 7(a) Underwriting</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold" style={{ background: 'rgba(69,128,245,0.1)', color: '#4580F5', border: '1px solid rgba(69,128,245,0.25)' }}>
+          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider" style={{ background: 'rgba(6,182,212,0.08)', color: '#06B6D4', border: '1px solid rgba(6,182,212,0.22)' }}>
             Active Analysis
           </span>
-          <Activity size={12} style={{ color: '#4A5970' }} />
+          <Activity size={12} style={{ color: '#555555' }} />
         </div>
       </div>
 
@@ -72,14 +72,14 @@ function MiniDashboard() {
       <div className="grid grid-cols-4 gap-2 p-3">
         {[
           { l: 'Health Score', v: '87/100', c: '#34D399', sub: 'Excellent' },
-          { l: 'Annual Revenue', v: '$4.2M', c: '#DDE5F4', sub: 'FY 2023' },
+          { l: 'Annual Revenue', v: '$4.2M', c: '#ffffff', sub: 'FY 2023' },
           { l: 'DSCR Ratio', v: '1.45×', c: '#34D399', sub: 'SBA Qualified' },
-          { l: 'Est. Valuation', v: '$12.6M', c: '#DDE5F4', sub: 'Blended 3.0×' },
+          { l: 'Est. Valuation', v: '$12.6M', c: '#ffffff', sub: 'Blended 3.0×' },
         ].map(k => (
-          <div key={k.l} className="rounded p-2.5" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
-            <div className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: '#4A5970' }}>{k.l}</div>
+          <div key={k.l} className="rounded p-2.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}>
+            <div className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: '#555555' }}>{k.l}</div>
             <div className="text-sm font-extrabold" style={{ color: k.c, fontFamily: 'ui-monospace, monospace' }}>{k.v}</div>
-            <div className="text-[8px] mt-0.5" style={{ color: '#4A5970' }}>{k.sub}</div>
+            <div className="text-[8px] mt-0.5" style={{ color: '#555555' }}>{k.sub}</div>
           </div>
         ))}
       </div>
@@ -87,50 +87,50 @@ function MiniDashboard() {
       {/* Chart + Workflow */}
       <div className="flex gap-2 px-3 pb-3 flex-1 min-h-0">
         {/* Revenue bar chart */}
-        <div className="flex-1 rounded p-3 flex flex-col min-h-0" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
+        <div className="flex-1 rounded p-3 flex flex-col min-h-0" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: '#4A5970' }}>Revenue vs Liabilities (Q1–Q4)</span>
+            <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: '#555555' }}>Revenue vs Liabilities (Q1–Q4)</span>
             <span className="text-[8px]" style={{ color: '#34D399' }}>↑ 18% YoY</span>
           </div>
           <div className="flex items-end gap-1.5 flex-1">
             {bars.map((h, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                <div className="w-full rounded-sm" style={{ height: `${h}%`, background: i % 2 === 0 ? '#4580F5' : '#16202E', opacity: i % 2 === 0 ? 0.85 : 1, transition: 'height 0.6s ease' }} />
-                <span className="text-[6px]" style={{ color: '#263652' }}>Q{Math.ceil((i + 1) / 2)}</span>
+                <div className="w-full rounded-sm" style={{ height: `${h}%`, background: i % 2 === 0 ? '#06B6D4' : 'rgba(255,255,255,0.06)', opacity: i % 2 === 0 ? 0.85 : 1, transition: 'height 0.6s ease' }} />
+                <span className="text-[6px]" style={{ color: '#333333' }}>Q{Math.ceil((i + 1) / 2)}</span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Risk flags panel */}
-        <div className="w-44 rounded p-3 flex flex-col" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
-          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#4A5970' }}>Underwriting Flags</div>
+        <div className="w-44 rounded p-3 flex flex-col" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555555' }}>Underwriting Flags</div>
           {[
             { l: 'DSCR Check',     s: 'Pass',    c: '#34D399' },
             { l: 'Collateral',     s: 'Pass',    c: '#34D399' },
             { l: 'Equity Inject.', s: 'Review',  c: '#F59E0B' },
             { l: 'Credit History', s: 'Pass',    c: '#34D399' },
-            { l: 'Ownership Docs', s: 'Pending', c: '#4A5970' },
+            { l: 'Ownership Docs', s: 'Pending', c: '#555555' },
           ].map(w => (
-            <div key={w.l} className="flex items-center justify-between py-1" style={{ borderBottom: '1px solid #1C2840' }}>
-              <span className="text-[8px]" style={{ color: '#8595B0' }}>{w.l}</span>
+            <div key={w.l} className="flex items-center justify-between py-1" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+              <span className="text-[8px]" style={{ color: '#999999' }}>{w.l}</span>
               <span className="text-[8px] font-bold" style={{ color: w.c }}>{w.s}</span>
             </div>
           ))}
         </div>
 
         {/* Workflow steps */}
-        <div className="w-40 rounded p-3 flex flex-col" style={{ background: '#0F1520', border: '1px solid #1C2840' }}>
-          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#4A5970' }}>Analysis Workflow</div>
+        <div className="w-40 rounded p-3 flex flex-col" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555555' }}>Analysis Workflow</div>
           {[
             { l: 'DSCR & Ratios', s: 'Done',   c: '#34D399', n: '1' },
-            { l: 'Credit Memo',   s: 'Active',  c: '#4580F5', n: '2' },
-            { l: 'DD Checklist',  s: 'Next',    c: '#8B5CF6', n: '3' },
-            { l: 'AI Advisor',    s: 'Queue',   c: '#4A5970', n: '4' },
+            { l: 'Credit Memo',   s: 'Active',  c: '#06B6D4', n: '2' },
+            { l: 'DD Checklist',  s: 'Next',    c: '#7C3AED', n: '3' },
+            { l: 'AI Advisor',    s: 'Queue',   c: '#555555', n: '4' },
           ].map(w => (
-            <div key={w.l} className="flex items-center gap-1.5 py-1.5" style={{ borderBottom: '1px solid #1C2840' }}>
+            <div key={w.l} className="flex items-center gap-1.5 py-1.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
               <span className="text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: `${w.c}18`, color: w.c, border: `1px solid ${w.c}30` }}>{w.n}</span>
-              <span className="text-[8px] flex-1" style={{ color: '#8595B0' }}>{w.l}</span>
+              <span className="text-[8px] flex-1" style={{ color: '#999999' }}>{w.l}</span>
               <span className="text-[7px] font-bold" style={{ color: w.c }}>{w.s}</span>
             </div>
           ))}
@@ -138,15 +138,15 @@ function MiniDashboard() {
       </div>
 
       {/* Bottom status bar */}
-      <div className="flex items-center gap-3 px-4 py-2" style={{ borderTop: '1px solid #1C2840' }}>
+      <div className="flex items-center gap-3 px-4 py-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#4580F5' }} />
-          <span className="text-[8px]" style={{ color: '#4A5970' }}>AI analysis running · 4 of 6 steps complete</span>
+          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#06B6D4' }} />
+          <span className="text-[8px]" style={{ color: '#555555' }}>AI analysis running · 4 of 6 steps complete</span>
         </div>
-        <div className="flex-1 h-0.5 rounded-full" style={{ background: '#1C2840' }}>
-          <div className="h-full rounded-full" style={{ width: '67%', background: '#4580F5' }} />
+        <div className="flex-1 h-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
+          <div className="h-full rounded-full" style={{ width: '67%', background: 'linear-gradient(to right, #06B6D4, #EC4899)' }} />
         </div>
-        <span className="text-[8px] font-mono font-bold" style={{ color: '#4580F5' }}>67%</span>
+        <span className="text-[8px] font-mono font-bold" style={{ color: '#06B6D4' }}>67%</span>
       </div>
     </div>
   );
@@ -210,36 +210,38 @@ export default function PipelineDashboard() {
             transition={{ delay: 0.3, duration: 0.7, ease: 'easeOut' }}
             className="flex-1 flex flex-col items-center md:items-start text-center md:text-left"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-semibold tracking-widest uppercase"
-              style={{ background: 'rgba(69,128,245,0.08)', border: '1px solid rgba(69,128,245,0.22)', color: '#4580F5' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-bold tracking-widest uppercase"
+              style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.22)', color: '#06B6D4', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
               <Zap size={11} />
               SBA 7(a) AI Underwriting Platform
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-4"
+            <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4"
               style={{
-                background: 'linear-gradient(to bottom, #DDE5F4 30%, #4A5970)',
+                background: 'linear-gradient(to right, #06B6D4, #EC4899)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                letterSpacing: '-0.03em',
+                letterSpacing: '-0.04em',
+                textTransform: 'uppercase',
+                fontFamily: 'Aspekta, system-ui, sans-serif',
               }}>
               AI Financial<br />Intelligence
             </h1>
 
-            <p className="text-sm leading-relaxed mb-7 max-w-md" style={{ color: '#8595B0' }}>
+            <p className="text-sm leading-relaxed mb-7 max-w-md" style={{ color: '#999999', fontWeight: 300 }}>
               Reduces 4–8 hours of manual analyst work to under 30 minutes per SBA 7(a) application.
               Analytical support only — credit decisions remain with the loan officer.
             </p>
 
             <div className="flex gap-3 mb-10">
               <Link href="/underwriting"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
-                style={{ background: '#4580F5', color: '#fff', boxShadow: '0 2px 12px rgba(69,128,245,0.3)' }}>
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-transform hover:scale-[1.02] active:scale-[0.97]"
+                style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
                 Start Analysis <ArrowRight size={14} />
               </Link>
               <Link href="/advisor"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm transition-all duration-200 hover:opacity-80"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid #1C2840', color: '#DDE5F4' }}>
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm transition-transform hover:scale-[1.02]"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', backdropFilter: 'blur(8px)' }}>
                 Ask AI <ChevronRight size={14} />
               </Link>
             </div>
@@ -252,9 +254,9 @@ export default function PipelineDashboard() {
                 { icon: Zap, label: 'Target PLPs', value: '140' },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="text-center">
-                  <Icon size={12} className="mx-auto mb-1" style={{ color: '#4A5970' }} />
-                  <div className="text-xl font-extrabold font-mono" style={{ color: '#4580F5' }}>{value}</div>
-                  <div className="text-[9px] uppercase tracking-widest font-semibold mt-0.5" style={{ color: '#4A5970' }}>{label}</div>
+                  <Icon size={12} className="mx-auto mb-1" style={{ color: '#555555' }} />
+                  <div className="text-xl font-extrabold font-mono" style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{value}</div>
+                  <div className="text-[9px] uppercase tracking-widest font-bold mt-0.5" style={{ color: '#555555', fontFamily: 'Aspekta, system-ui, sans-serif' }}>{label}</div>
                 </div>
               ))}
             </div>
@@ -282,12 +284,12 @@ export default function PipelineDashboard() {
               transition={{ duration: 0.6 }}
               className="flex flex-col items-center"
             >
-              <span className="text-sm font-semibold uppercase tracking-widest mb-3" style={{ color: '#4580F5' }}>
+              <span className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: '#06B6D4', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
                 Platform Preview
               </span>
-              <h2 className="text-3xl md:text-5xl font-bold mb-3" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+              <h2 className="text-3xl md:text-5xl font-black mb-3 uppercase" style={{ color: '#ffffff', letterSpacing: '-0.03em', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
                 Complete SBA 7(a) analysis<br />
-                <span style={{ color: '#4580F5' }}>in under 30 minutes</span>
+                <span style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>in under 30 minutes</span>
               </h2>
               <p className="text-sm max-w-xl" style={{ color: 'var(--text-secondary)' }}>
                 From DSCR ratios and credit memos to due diligence checklists — everything a loan officer needs in one unified platform.
@@ -348,11 +350,11 @@ export default function PipelineDashboard() {
           <div className="flex h-full">
             <div className="flex-1 p-8 relative z-10 flex flex-col justify-center">
               <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-5 text-[10px] font-bold uppercase tracking-widest"
-                style={{ background: 'rgba(69,128,245,0.08)', border: '1px solid rgba(69,128,245,0.22)', color: '#4580F5', borderRadius: 4 }}>
+                style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.22)', color: '#06B6D4', borderRadius: 4, fontFamily: 'Aspekta, system-ui, sans-serif' }}>
                 <Zap size={9} /> Live Platform
               </div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-4"
-                style={{ background: 'linear-gradient(to bottom, #DDE5F4 40%, #4A5970)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              <h2 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-4 uppercase"
+                style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
                 <WaveText text="SBA 7(a)" />
                 <br />
                 <WaveText text="Intelligence" />
@@ -362,8 +364,8 @@ export default function PipelineDashboard() {
               </p>
               <div className="flex gap-3 mt-6">
                 <Link href="/underwriting"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 font-bold text-sm transition-all active:scale-[0.98]"
-                  style={{ background: '#4580F5', color: '#fff', borderRadius: 4, boxShadow: '0 2px 12px rgba(69,128,245,0.3)' }}>
+                  className="inline-flex items-center gap-2 px-5 py-2.5 font-bold text-sm transition-transform hover:scale-[1.02] active:scale-[0.97]"
+                  style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', color: '#fff', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
                   Start Analysis <ArrowRight size={13} />
                 </Link>
               </div>
@@ -636,7 +638,7 @@ export default function PipelineDashboard() {
             ].map(s => (
               <div key={s.label} className="p-4 rounded-xl" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)' }}>
                 <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-tertiary)' }}>{s.label}</div>
-                <div className="text-base font-extrabold font-mono mb-1" style={{ color: 'var(--accent)' }}>{s.value}</div>
+                <div className="text-base font-extrabold font-mono mb-1" style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.value}</div>
                 <div className="text-[10px]" style={{ color: 'var(--text-tertiary)' }}>{s.note}</div>
               </div>
             ))}

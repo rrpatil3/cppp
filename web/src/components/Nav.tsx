@@ -37,8 +37,8 @@ export default function Nav({ mobile = false }: NavProps) {
     return (
       <nav
         style={{
-          background: 'rgba(9,13,22,0.96)',
-          borderTop: '1px solid var(--border)',
+          background: 'rgba(5,5,5,0.96)',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           display: 'flex',
@@ -61,13 +61,16 @@ export default function Nav({ mobile = false }: NavProps) {
                 gap: '0.2rem',
                 padding: '0.35rem 0.5rem',
                 borderRadius: '0.625rem',
-                color: active ? 'var(--accent)' : 'var(--text-tertiary)',
-                background: active ? 'var(--accent-dim)' : 'transparent',
+                color: active ? '#06B6D4' : '#555555',
+                background: active ? 'rgba(6,182,212,0.08)' : 'transparent',
                 textDecoration: 'none',
-                fontSize: '0.6rem',
-                fontWeight: 600,
+                fontSize: '0.55rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
                 minWidth: 44,
-                transition: 'color 0.2s cubic-bezier(0.22,1,0.36,1), background 0.2s cubic-bezier(0.22,1,0.36,1)',
+                fontFamily: 'Aspekta, system-ui, sans-serif',
+                transition: 'color 0.2s ease, background 0.2s ease',
               }}
             >
               <Icon size={18} strokeWidth={active ? 2.5 : 1.75} />
@@ -83,46 +86,51 @@ export default function Nav({ mobile = false }: NavProps) {
     <nav
       style={{
         width: 'var(--sidebar-width)',
-        background: 'var(--bg-base)',
-        borderRight: '1px solid var(--border)',
+        background: '#050505',
+        borderRight: '1px solid rgba(255,255,255,0.06)',
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
         flexShrink: 0,
       }}
     >
-      {/* Wordmark – no logo icon */}
+      {/* Wordmark */}
       <div
         style={{
           height: 72,
           display: 'flex',
           alignItems: 'center',
           padding: '0 1.75rem',
-          borderBottom: '1px solid var(--border)',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
           flexShrink: 0,
         }}
       >
         <div>
           <div
             style={{
-              fontWeight: 800,
-              fontSize: '1.05rem',
-              color: 'var(--text-primary)',
+              fontWeight: 900,
+              fontSize: '1rem',
               letterSpacing: '-0.03em',
               lineHeight: 1.1,
+              textTransform: 'uppercase',
+              fontFamily: 'Aspekta, system-ui, sans-serif',
+              background: 'linear-gradient(to right, #06B6D4, #EC4899)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
             }}
           >
-            CapTable
-            <span style={{ color: 'var(--accent)', marginLeft: 2 }}>AI</span>
+            CapTable AI
           </div>
           <div
             style={{
-              fontSize: '0.6rem',
-              color: 'var(--text-tertiary)',
-              fontWeight: 500,
-              letterSpacing: '0.08em',
+              fontSize: '0.55rem',
+              color: '#333333',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
-              marginTop: 2,
+              marginTop: 3,
+              fontFamily: 'Aspekta, system-ui, sans-serif',
             }}
           >
             SBA Lender Platform
@@ -134,11 +142,12 @@ export default function Nav({ mobile = false }: NavProps) {
       <div style={{ padding: '1.25rem 1.5rem 0.4rem' }}>
         <span
           style={{
-            fontSize: '0.6rem',
+            fontSize: '0.55rem',
             fontWeight: 700,
-            letterSpacing: '0.14em',
+            letterSpacing: '0.16em',
             textTransform: 'uppercase',
-            color: 'var(--text-tertiary)',
+            color: '#333333',
+            fontFamily: 'Aspekta, system-ui, sans-serif',
           }}
         >
           Loan Officer Tools
@@ -171,18 +180,19 @@ export default function Nav({ mobile = false }: NavProps) {
                 gap: '0.625rem',
                 padding: '0.65rem 0.875rem',
                 borderRadius: '0.625rem',
-                color: active ? 'var(--text-primary)' : 'var(--text-secondary)',
+                color: active ? '#ffffff' : '#555555',
                 textDecoration: 'none',
-                fontSize: '0.85rem',
-                fontWeight: active ? 600 : 400,
-                background: active ? 'var(--bg-elevated)' : 'transparent',
-                border: active ? '1px solid var(--border)' : '1px solid transparent',
-                boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,0.07)' : 'none',
-                transition: 'all 0.3s cubic-bezier(0.32,0.72,0,1)',
+                fontSize: '0.8rem',
+                fontWeight: active ? 700 : 400,
+                fontFamily: 'Aspekta, system-ui, sans-serif',
+                background: active ? 'rgba(255,255,255,0.05)' : 'transparent',
+                border: active ? '1px solid rgba(255,255,255,0.1)' : '1px solid transparent',
+                backdropFilter: active ? 'blur(8px)' : 'none',
+                transition: 'all 0.25s cubic-bezier(0.22,1,0.36,1)',
               }}
               className="nav-item-link"
             >
-              {/* Active left accent bar */}
+              {/* Active left accent bar — gradient */}
               {active && (
                 <div
                   style={{
@@ -193,16 +203,16 @@ export default function Nav({ mobile = false }: NavProps) {
                     width: 3,
                     height: '55%',
                     borderRadius: '0 2px 2px 0',
-                    background: 'var(--accent)',
+                    background: 'linear-gradient(to bottom, #06B6D4, #EC4899)',
                   }}
                 />
               )}
 
               <Icon
-                size={16}
+                size={15}
                 strokeWidth={active ? 2.5 : 1.75}
                 style={{
-                  color: active ? 'var(--accent)' : 'inherit',
+                  color: active ? '#06B6D4' : 'inherit',
                   flexShrink: 0,
                   transition: 'color 0.2s ease',
                 }}
@@ -213,15 +223,16 @@ export default function Nav({ mobile = false }: NavProps) {
                 <span
                   style={{
                     marginLeft: 'auto',
-                    fontSize: '0.58rem',
+                    fontSize: '0.52rem',
                     fontWeight: 700,
                     textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    background: 'var(--accent-dim)',
-                    color: 'var(--accent)',
-                    padding: '0.12rem 0.45rem',
+                    letterSpacing: '0.1em',
+                    background: 'rgba(6,182,212,0.08)',
+                    color: '#06B6D4',
+                    padding: '0.1rem 0.4rem',
                     borderRadius: 9999,
-                    border: '1px solid var(--accent-border)',
+                    border: '1px solid rgba(6,182,212,0.22)',
+                    fontFamily: 'Aspekta, system-ui, sans-serif',
                   }}
                 >
                   {item.badge}
@@ -232,35 +243,23 @@ export default function Nav({ mobile = false }: NavProps) {
         })}
       </div>
 
-      {/* Footer */}
+      {/* Footer disclaimer */}
       <div style={{ padding: '1.25rem 0.875rem', flexShrink: 0 }}>
         <div
           className="footer-card-hover"
           style={{
             padding: '0.875rem',
             borderRadius: '0.75rem',
-            background: 'var(--bg-surface)',
-            border: '1px solid var(--border)',
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            backdropFilter: 'blur(8px)',
             transition: 'border-color 0.2s ease',
           }}
         >
-          <p
-            style={{
-              fontSize: '0.68rem',
-              fontWeight: 600,
-              color: 'var(--text-secondary)',
-              marginBottom: '0.2rem',
-            }}
-          >
+          <p style={{ fontSize: '0.65rem', fontWeight: 700, color: '#555555', marginBottom: '0.2rem', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
             Analytical Support Only
           </p>
-          <p
-            style={{
-              fontSize: '0.62rem',
-              color: 'var(--text-tertiary)',
-              lineHeight: 1.5,
-            }}
-          >
+          <p style={{ fontSize: '0.6rem', color: '#333333', lineHeight: 1.5 }}>
             All outputs require loan officer review. Not a credit decision tool.
           </p>
         </div>

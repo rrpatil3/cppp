@@ -59,12 +59,13 @@ export default function LoginPage() {
       style={{
         minHeight: '100dvh',
         display: 'flex',
-        background: 'var(--bg-base)',
+        background: '#050505',
         position: 'relative',
         overflow: 'hidden',
+        fontFamily: 'Aspekta, system-ui, sans-serif',
       }}
     >
-      {/* Background accent glow */}
+      {/* Background glow */}
       <div
         aria-hidden
         style={{
@@ -74,14 +75,12 @@ export default function LoginPage() {
           transform: 'translateX(-50%)',
           width: 600,
           height: 400,
-          background: 'radial-gradient(ellipse, rgba(69,128,245,0.08) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 70%)',
           filter: 'blur(60px)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
-
-      {/* Secondary glow bottom-right */}
       <div
         aria-hidden
         style={{
@@ -90,19 +89,19 @@ export default function LoginPage() {
           right: '10%',
           width: 400,
           height: 300,
-          background: 'radial-gradient(ellipse, rgba(52,211,153,0.04) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse, rgba(6,182,212,0.05) 0%, transparent 70%)',
           filter: 'blur(60px)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       />
 
-      {/* Left panel — wordmark + stats */}
+      {/* Left panel */}
       <div
         className="hidden md:flex flex-col justify-between"
         style={{
           flex: '0 0 42%',
-          borderRight: '1px solid var(--border)',
+          borderRight: '1px solid rgba(255,255,255,0.06)',
           padding: '3rem 3.5rem',
           position: 'relative',
           zIndex: 1,
@@ -116,20 +115,24 @@ export default function LoginPage() {
         >
           <div
             style={{
-              fontWeight: 800,
-              fontSize: '1.4rem',
-              letterSpacing: '-0.035em',
-              color: 'var(--text-primary)',
+              fontWeight: 900,
+              fontSize: '1.2rem',
+              letterSpacing: '-0.03em',
+              textTransform: 'uppercase',
+              background: 'linear-gradient(to right, #06B6D4, #EC4899)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
             }}
           >
-            CapTable<span style={{ color: 'var(--accent)' }}>AI</span>
+            CapTable AI
           </div>
           <div
             style={{
-              fontSize: '0.65rem',
-              color: 'var(--text-tertiary)',
-              fontWeight: 500,
-              letterSpacing: '0.1em',
+              fontSize: '0.6rem',
+              color: '#333333',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
               textTransform: 'uppercase',
               marginTop: 4,
             }}
@@ -146,18 +149,19 @@ export default function LoginPage() {
         >
           <p
             style={{
-              fontSize: '2rem',
-              fontWeight: 800,
+              fontSize: 'clamp(1.75rem, 3vw, 2.5rem)',
+              fontWeight: 900,
               letterSpacing: '-0.04em',
-              lineHeight: 1.15,
-              color: 'var(--text-primary)',
+              lineHeight: 1.05,
+              textTransform: 'uppercase',
+              color: '#ffffff',
               maxWidth: 340,
               marginBottom: '1.5rem',
             }}
           >
-            SBA underwriting analysis in under 30 minutes.
+            SBA underwriting in under 30 minutes.
           </p>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', maxWidth: 320, lineHeight: 1.65 }}>
+          <p style={{ fontSize: '0.875rem', fontWeight: 300, color: '#999999', maxWidth: 320, lineHeight: 1.65 }}>
             AI-powered financial spreading, DSCR ratios, credit memo generation, and due diligence — built for loan officers.
           </p>
 
@@ -171,22 +175,25 @@ export default function LoginPage() {
               <div key={s.label}>
                 <div
                   style={{
-                    fontSize: '1.4rem',
-                    fontWeight: 800,
-                    fontFamily: 'var(--font-mono)',
-                    color: 'var(--accent)',
-                    letterSpacing: '-0.02em',
+                    fontSize: '1.5rem',
+                    fontWeight: 900,
+                    fontFamily: 'ui-monospace, monospace',
+                    background: 'linear-gradient(to right, #06B6D4, #EC4899)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    letterSpacing: '-0.03em',
                   }}
                 >
                   {s.value}
                 </div>
                 <div
                   style={{
-                    fontSize: '0.65rem',
-                    color: 'var(--text-tertiary)',
+                    fontSize: '0.6rem',
+                    color: '#555555',
                     textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    fontWeight: 700,
                     marginTop: 2,
                   }}
                 >
@@ -202,7 +209,7 @@ export default function LoginPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
-          style={{ fontSize: '0.65rem', color: 'var(--text-tertiary)', lineHeight: 1.6 }}
+          style={{ fontSize: '0.65rem', color: '#333333', lineHeight: 1.6 }}
         >
           Analytical support only. All credit decisions remain with the loan officer.
         </motion.p>
@@ -222,13 +229,17 @@ export default function LoginPage() {
         <div className="md:hidden mb-8 text-center">
           <div
             style={{
-              fontWeight: 800,
+              fontWeight: 900,
               fontSize: '1.4rem',
               letterSpacing: '-0.035em',
-              color: 'var(--text-primary)',
+              textTransform: 'uppercase',
+              background: 'linear-gradient(to right, #06B6D4, #EC4899)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
             }}
           >
-            CapTable<span style={{ color: 'var(--accent)' }}>AI</span>
+            CapTable AI
           </div>
         </div>
 
@@ -242,16 +253,18 @@ export default function LoginPage() {
           <motion.div variants={itemVariants} className="mb-6">
             <h2
               style={{
-                fontSize: '1.5rem',
-                fontWeight: 800,
-                letterSpacing: '-0.03em',
-                color: 'var(--text-primary)',
+                fontSize: '1.75rem',
+                fontWeight: 900,
+                letterSpacing: '-0.04em',
+                textTransform: 'uppercase',
+                color: '#ffffff',
                 marginBottom: '0.375rem',
+                fontFamily: 'Aspekta, system-ui, sans-serif',
               }}
             >
-              {tab === 'signin' ? 'Welcome back' : 'Create account'}
+              {tab === 'signin' ? 'Welcome Back' : 'Create Account'}
             </h2>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+            <p style={{ fontSize: '0.875rem', fontWeight: 300, color: '#999999' }}>
               {tab === 'signin'
                 ? 'Sign in to your institution account.'
                 : 'Start your free analysis today.'}
@@ -265,10 +278,11 @@ export default function LoginPage() {
               display: 'flex',
               gap: '0.25rem',
               marginBottom: '1.5rem',
-              background: 'var(--bg-elevated)',
+              background: 'rgba(255,255,255,0.04)',
               padding: '0.25rem',
               borderRadius: '0.625rem',
-              border: '1px solid var(--border)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(8px)',
             }}
           >
             {(['signin', 'signup'] as const).map((t) => (
@@ -281,12 +295,16 @@ export default function LoginPage() {
                   borderRadius: '0.425rem',
                   border: 'none',
                   cursor: 'pointer',
-                  background: tab === t ? 'var(--bg-surface)' : 'transparent',
-                  color: tab === t ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                  fontWeight: tab === t ? 600 : 400,
-                  fontSize: '0.85rem',
+                  background: tab === t
+                    ? 'linear-gradient(to right, #06B6D4, #EC4899)'
+                    : 'transparent',
+                  color: tab === t ? '#ffffff' : '#555555',
+                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  fontFamily: 'Aspekta, system-ui, sans-serif',
                   transition: 'background 0.2s ease, color 0.2s ease',
-                  boxShadow: tab === t ? '0 1px 3px rgba(0,0,0,0.2)' : 'none',
                 }}
               >
                 {t === 'signin' ? 'Sign In' : 'Create Account'}
@@ -372,7 +390,7 @@ export default function LoginPage() {
                   className="btn-primary"
                   type="submit"
                   disabled={loading}
-                  style={{ width: '100%', justifyContent: 'center', padding: '0.7rem' }}
+                  style={{ width: '100%', justifyContent: 'center', padding: '0.75rem' }}
                 >
                   {loading ? (
                     <span className="flex items-center gap-2">
@@ -400,8 +418,8 @@ export default function LoginPage() {
             variants={itemVariants}
             style={{
               marginTop: '1.25rem',
-              fontSize: '0.65rem',
-              color: 'var(--text-tertiary)',
+              fontSize: '0.6rem',
+              color: '#333333',
               textAlign: 'center',
               lineHeight: 1.6,
             }}

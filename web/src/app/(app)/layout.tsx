@@ -7,9 +7,22 @@ export const dynamic = 'force-dynamic';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative', zIndex: 1 }}>
-      {/* Accent ambient glow */}
-      <div className="ambient-glow" aria-hidden="true" />
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative', zIndex: 1, background: '#050505' }}>
+      {/* Purple ambient glow */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          top: '-20%',
+          left: '40%',
+          width: '60vw',
+          height: '60vw',
+          background: 'radial-gradient(ellipse, rgba(124,58,237,0.05) 0%, transparent 70%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+          animation: 'drift 14s ease-in-out infinite alternate',
+        }}
+      />
 
       {/* Sidebar – desktop only */}
       <div className="hidden md:flex">
@@ -19,23 +32,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Main content area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <AppHeader />
-
-        {/* Subtle top glow under header */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: 900,
-            height: 120,
-            background: 'rgba(69,128,245,0.04)',
-            filter: 'blur(80px)',
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
 
         <main
           className="flex-1 overflow-y-auto pb-20 md:pb-0"
@@ -52,7 +48,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <ScrollReveal />
 
-      {/* Fixed grain overlay — GPU-safe, pointer-events-none */}
+      {/* Grain overlay */}
       <div className="grain-overlay" aria-hidden="true" />
     </div>
   );
