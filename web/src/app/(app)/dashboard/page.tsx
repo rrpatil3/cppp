@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -10,20 +10,6 @@ import {
 import type { Business, BalanceSheetItem } from '@/lib/types';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import {
-  TrendingUp, FileText, CheckSquare, MessageSquare,
-  BarChart2, PieChart, ArrowRight, AlertTriangle,
-  Zap, Shield, Clock, ChevronRight, Activity,
-} from 'lucide-react';
-import { LampContainer } from '@/components/ui/lamp';
-import { ContainerScroll } from '@/components/ui/container-scroll-animation';
-import { Spotlight } from '@/components/ui/spotlight';
-import { FinancialHeroViz } from '@/components/ui/financial-hero-viz';
-import { SplineScene } from '@/components/ui/splite';
-import { BackgroundPaths } from '@/components/ui/background-paths';
-import { WaveText } from '@/components/ui/wave-text';
-import SpotlightCard from '@/components/ui/SpotlightCard';
-import LiveKPIStream from '@/components/ui/LiveKPIStream';
 
 interface BorrowerCard {
   business: Business;
@@ -40,119 +26,48 @@ interface PageData {
 }
 
 const workflowItems = [
-  { label: 'Run DSCR & SBA Ratios', sub: 'Global cash flow · Leverage · Collateral', href: '/underwriting', step: '1', icon: TrendingUp, color: '#4580F5' },
-  { label: 'Generate Credit Memo', sub: 'AI-drafted SBA 7(a) credit memo', href: '/credit-memo', step: '2', icon: FileText, color: '#34D399' },
-  { label: 'Due Diligence Checklist', sub: '12-category DD assessment · Valuation', href: '/tools', step: '3', icon: CheckSquare, color: '#8B5CF6' },
-  { label: 'Ask AI Underwriter', sub: 'Structured Q&A on borrower financials', href: '/advisor', step: '4', icon: MessageSquare, color: '#F59E0B' },
-  { label: 'M&A Suite & CIM', sub: 'Valuation · Buyer discovery · CIM gen', href: '/ma', step: '5', icon: BarChart2, color: '#EC4899' },
-  { label: 'Balance Sheet & Cap Table', sub: 'Asset/liability spreading · Ownership', href: '/balance-sheet', step: '6', icon: PieChart, color: '#3D7EF5' },
+  { label: 'Run DSCR & SBA Ratios', sub: 'Global cash flow · Leverage · Collateral', href: '/underwriting', step: '01' },
+  { label: 'Generate Credit Memo', sub: 'AI-drafted SBA 7(a) credit memo', href: '/credit-memo', step: '02', tag: 'AI' },
+  { label: 'Due Diligence Checklist', sub: '12-category DD assessment · Valuation', href: '/tools', step: '03' },
+  { label: 'Ask AI Underwriter', sub: 'Structured Q&A on borrower financials', href: '/advisor', step: '04', tag: 'AI' },
+  { label: 'M&A Suite & CIM', sub: 'Valuation · Buyer discovery · CIM generation', href: '/ma', step: '05', tag: 'AI' },
+  { label: 'Balance Sheet & Cap Table', sub: 'Asset/liability spreading · Ownership', href: '/balance-sheet', step: '06' },
 ];
 
-// ── Financial mini-dashboard shown inside the scroll animation ──
-function MiniDashboard() {
-  const bars = [58, 74, 63, 88, 71, 95, 82];
+function useScrollReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) el.classList.add('visible'); },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return ref;
+}
+
+function RevealBlock({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) el.classList.add('visible'); },
+      { threshold: 0.08 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   return (
-    <div className="w-full h-full flex flex-col" style={{ background: '#050505', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-4 py-2.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full animate-live-pulse" style={{ background: '#ef4444' }} />
-          <span className="text-xs font-bold uppercase" style={{ color: '#ffffff', letterSpacing: '0.06em' }}>CapTable AI</span>
-          <span className="text-[10px]" style={{ color: '#555555' }}>· SBA 7(a) Underwriting</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider" style={{ background: 'rgba(6,182,212,0.08)', color: '#06B6D4', border: '1px solid rgba(6,182,212,0.22)' }}>
-            Active Analysis
-          </span>
-          <Activity size={12} style={{ color: '#555555' }} />
-        </div>
-      </div>
-
-      {/* KPI row */}
-      <div className="grid grid-cols-4 gap-2 p-3">
-        {[
-          { l: 'Health Score', v: '87/100', c: '#34D399', sub: 'Excellent' },
-          { l: 'Annual Revenue', v: '$4.2M', c: '#ffffff', sub: 'FY 2023' },
-          { l: 'DSCR Ratio', v: '1.45×', c: '#34D399', sub: 'SBA Qualified' },
-          { l: 'Est. Valuation', v: '$12.6M', c: '#ffffff', sub: 'Blended 3.0×' },
-        ].map(k => (
-          <div key={k.l} className="rounded p-2.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(8px)' }}>
-            <div className="text-[8px] font-bold uppercase tracking-wider mb-1" style={{ color: '#555555' }}>{k.l}</div>
-            <div className="text-sm font-extrabold" style={{ color: k.c, fontFamily: 'ui-monospace, monospace' }}>{k.v}</div>
-            <div className="text-[8px] mt-0.5" style={{ color: '#555555' }}>{k.sub}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Chart + Workflow */}
-      <div className="flex gap-2 px-3 pb-3 flex-1 min-h-0">
-        {/* Revenue bar chart */}
-        <div className="flex-1 rounded p-3 flex flex-col min-h-0" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[8px] font-bold uppercase tracking-wider" style={{ color: '#555555' }}>Revenue vs Liabilities (Q1–Q4)</span>
-            <span className="text-[8px]" style={{ color: '#34D399' }}>↑ 18% YoY</span>
-          </div>
-          <div className="flex items-end gap-1.5 flex-1">
-            {bars.map((h, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
-                <div className="w-full rounded-sm" style={{ height: `${h}%`, background: i % 2 === 0 ? '#06B6D4' : 'rgba(255,255,255,0.06)', opacity: i % 2 === 0 ? 0.85 : 1, transition: 'height 0.6s ease' }} />
-                <span className="text-[6px]" style={{ color: '#333333' }}>Q{Math.ceil((i + 1) / 2)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Risk flags panel */}
-        <div className="w-44 rounded p-3 flex flex-col" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555555' }}>Underwriting Flags</div>
-          {[
-            { l: 'DSCR Check',     s: 'Pass',    c: '#34D399' },
-            { l: 'Collateral',     s: 'Pass',    c: '#34D399' },
-            { l: 'Equity Inject.', s: 'Review',  c: '#F59E0B' },
-            { l: 'Credit History', s: 'Pass',    c: '#34D399' },
-            { l: 'Ownership Docs', s: 'Pending', c: '#555555' },
-          ].map(w => (
-            <div key={w.l} className="flex items-center justify-between py-1" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-              <span className="text-[8px]" style={{ color: '#999999' }}>{w.l}</span>
-              <span className="text-[8px] font-bold" style={{ color: w.c }}>{w.s}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Workflow steps */}
-        <div className="w-40 rounded p-3 flex flex-col" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
-          <div className="text-[8px] font-bold uppercase tracking-wider mb-2.5" style={{ color: '#555555' }}>Analysis Workflow</div>
-          {[
-            { l: 'DSCR & Ratios', s: 'Done',   c: '#34D399', n: '1' },
-            { l: 'Credit Memo',   s: 'Active',  c: '#06B6D4', n: '2' },
-            { l: 'DD Checklist',  s: 'Next',    c: '#7C3AED', n: '3' },
-            { l: 'AI Advisor',    s: 'Queue',   c: '#555555', n: '4' },
-          ].map(w => (
-            <div key={w.l} className="flex items-center gap-1.5 py-1.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-              <span className="text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: `${w.c}18`, color: w.c, border: `1px solid ${w.c}30` }}>{w.n}</span>
-              <span className="text-[8px] flex-1" style={{ color: '#999999' }}>{w.l}</span>
-              <span className="text-[7px] font-bold" style={{ color: w.c }}>{w.s}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Bottom status bar */}
-      <div className="flex items-center gap-3 px-4 py-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="flex items-center gap-1.5">
-          <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#06B6D4' }} />
-          <span className="text-[8px]" style={{ color: '#555555' }}>AI analysis running · 4 of 6 steps complete</span>
-        </div>
-        <div className="flex-1 h-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }}>
-          <div className="h-full rounded-full" style={{ width: '67%', background: 'linear-gradient(to right, #06B6D4, #EC4899)' }} />
-        </div>
-        <span className="text-[8px] font-mono font-bold" style={{ color: '#06B6D4' }}>67%</span>
-      </div>
+    <div ref={ref} className="reveal" style={{ animationDelay: `${delay}ms` }}>
+      {children}
     </div>
   );
 }
 
-// ── Main page ──
 export default function PipelineDashboard() {
   const router = useRouter();
   const [data, setData] = useState<PageData | null>(null);
@@ -160,7 +75,6 @@ export default function PipelineDashboard() {
 
   useEffect(() => {
     const supabase = createClient();
-
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push('/login'); return; }
@@ -193,126 +107,140 @@ export default function PipelineDashboard() {
       });
       setLoading(false);
     }
-
     load();
   }, [router]);
 
-  // ── Lamp hero + scroll showcase always render (no data needed) ──
   const hero = (
-    <>
-      {/* ── SECTION 1: Lamp Hero ── */}
-      <LampContainer>
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 w-full">
-          {/* Left: text content */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.7, ease: 'easeOut' }}
-            className="flex-1 flex flex-col items-center md:items-start text-center md:text-left"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-5 text-xs font-bold tracking-widest uppercase"
-              style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.22)', color: '#06B6D4', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-              <Zap size={11} />
-              SBA 7(a) AI Underwriting Platform
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-black leading-tight mb-4"
-              style={{
-                background: 'linear-gradient(to right, #06B6D4, #EC4899)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                letterSpacing: '-0.04em',
-                textTransform: 'uppercase',
-                fontFamily: 'Aspekta, system-ui, sans-serif',
-              }}>
-              AI Financial<br />Intelligence
-            </h1>
-
-            <p className="text-sm leading-relaxed mb-7 max-w-md" style={{ color: '#999999', fontWeight: 300 }}>
-              Reduces 4–8 hours of manual analyst work to under 30 minutes per SBA 7(a) application.
-              Analytical support only — credit decisions remain with the loan officer.
-            </p>
-
-            <div className="flex gap-3 mb-10">
-              <Link href="/underwriting"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm transition-transform hover:scale-[1.02] active:scale-[0.97]"
-                style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-                Start Analysis <ArrowRight size={14} />
-              </Link>
-              <Link href="/advisor"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-medium text-sm transition-transform hover:scale-[1.02]"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#ffffff', backdropFilter: 'blur(8px)' }}>
-                Ask AI <ChevronRight size={14} />
-              </Link>
-            </div>
-
-            {/* Platform stats row */}
-            <div className="flex gap-8">
-              {[
-                { icon: Shield, label: 'SBA 7(a) Loans', value: '57,362' },
-                { icon: Clock, label: 'Hours Saved', value: '~5 hrs' },
-                { icon: Zap, label: 'Target PLPs', value: '140' },
-              ].map(({ icon: Icon, label, value }) => (
-                <div key={label} className="text-center">
-                  <Icon size={12} className="mx-auto mb-1" style={{ color: '#555555' }} />
-                  <div className="text-xl font-extrabold font-mono" style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{value}</div>
-                  <div className="text-[9px] uppercase tracking-widest font-bold mt-0.5" style={{ color: '#555555', fontFamily: 'Aspekta, system-ui, sans-serif' }}>{label}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right: animated financial viz */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.7, ease: 'easeOut' }}
-            className="flex-shrink-0 hidden md:block"
-          >
-            <FinancialHeroViz />
-          </motion.div>
+    <section
+      style={{
+        padding: '5rem 2.5rem 4rem',
+        maxWidth: 1200,
+        margin: '0 auto',
+        position: 'relative',
+        zIndex: 1,
+      }}
+    >
+      {/* Platform tag */}
+      <RevealBlock>
+        <div style={{ marginBottom: '1.75rem' }}>
+          <span className="eyebrow">SBA 7(a) AI Underwriting Platform</span>
         </div>
-      </LampContainer>
+      </RevealBlock>
 
-      {/* ── SECTION 2: ContainerScrollAnimation — Financial Platform Showcase ── */}
-      <div style={{ background: 'var(--bg-base)' }}>
-        <ContainerScroll
-          titleComponent={
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-col items-center"
-            >
-              <span className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: '#06B6D4', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-                Platform Preview
-              </span>
-              <h2 className="text-3xl md:text-5xl font-black mb-3 uppercase" style={{ color: '#ffffff', letterSpacing: '-0.03em', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-                Complete SBA 7(a) analysis<br />
-                <span style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>in under 30 minutes</span>
-              </h2>
-              <p className="text-sm max-w-xl" style={{ color: 'var(--text-secondary)' }}>
-                From DSCR ratios and credit memos to due diligence checklists — everything a loan officer needs in one unified platform.
-              </p>
-            </motion.div>
-          }
+      {/* Hero headline */}
+      <RevealBlock delay={60}>
+        <h1
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+            fontWeight: 400,
+            letterSpacing: '-0.03em',
+            lineHeight: 1.08,
+            color: '#111111',
+            maxWidth: 700,
+            marginBottom: '1.25rem',
+          }}
         >
-          <MiniDashboard />
-        </ContainerScroll>
-      </div>
-    </>
+          AI financial intelligence for SBA loan officers.
+        </h1>
+      </RevealBlock>
+
+      <RevealBlock delay={120}>
+        <p
+          style={{
+            fontSize: '1rem',
+            fontWeight: 400,
+            color: '#787774',
+            maxWidth: 520,
+            lineHeight: 1.7,
+            marginBottom: '2.5rem',
+            fontFamily: 'var(--font-body)',
+          }}
+        >
+          Reduces 4–8 hours of manual analyst work to under 30 minutes per SBA 7(a) application.
+          Analytical support only — credit decisions remain with the loan officer.
+        </p>
+      </RevealBlock>
+
+      {/* CTAs */}
+      <RevealBlock delay={180}>
+        <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '4rem', flexWrap: 'wrap' }}>
+          <Link href="/underwriting" className="btn-primary">
+            Start Analysis
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+            </svg>
+          </Link>
+          <Link href="/advisor" className="btn-secondary">
+            Ask AI Underwriter
+          </Link>
+        </div>
+      </RevealBlock>
+
+      {/* Stats strip */}
+      <RevealBlock delay={240}>
+        <div
+          style={{
+            display: 'flex',
+            gap: 0,
+            borderTop: '1px solid #EAEAEA',
+            paddingTop: '2rem',
+          }}
+        >
+          {[
+            { value: '57,362', label: 'SBA 7(a) Loans Processed Annually' },
+            { value: '~5 hrs', label: 'Saved Per Application' },
+            { value: '140',    label: 'Target Preferred Lenders' },
+          ].map((stat, i) => (
+            <div
+              key={stat.label}
+              style={{
+                flex: 1,
+                paddingRight: '2.5rem',
+                borderRight: i < 2 ? '1px solid #EAEAEA' : 'none',
+                paddingLeft: i > 0 ? '2.5rem' : '0',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '1.5rem',
+                  fontWeight: 600,
+                  color: '#111111',
+                  letterSpacing: '-0.02em',
+                  marginBottom: '0.25rem',
+                }}
+              >
+                {stat.value}
+              </div>
+              <div
+                style={{
+                  fontSize: '0.75rem',
+                  color: '#AEABA4',
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: 400,
+                }}
+              >
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </RevealBlock>
+    </section>
   );
 
   if (loading) {
     return (
-      <>
+      <div style={{ background: '#FBFBFA', minHeight: '100vh', position: 'relative' }}>
+        <div className="ambient-layer" aria-hidden />
         {hero}
-        <div className="px-6 md:px-10 py-8 max-w-6xl mx-auto space-y-4" style={{ background: 'var(--bg-base)' }}>
-          {[80, 240, 80, 180].map((h, i) => (
-            <div key={i} className="skeleton rounded" style={{ height: h }} />
+        <div style={{ padding: '0 2.5rem 4rem', maxWidth: 1200, margin: '0 auto' }}>
+          {[80, 220, 80, 160].map((h, i) => (
+            <div key={i} className="skeleton" style={{ height: h, marginBottom: 16 }} />
           ))}
         </div>
-      </>
+      </div>
     );
   }
 
@@ -325,356 +253,491 @@ export default function PipelineDashboard() {
   const equity = assets - liabilities;
   const redFlags = detectRedFlags(b.business, liabilities, equity);
   const deRatio = equity > 0 ? liabilities / equity : 0;
-  const scoreColor = b.healthScore >= 70 ? '#34D399' : b.healthScore >= 45 ? '#F59E0B' : '#EF4444';
+  const healthColor = b.healthScore >= 70 ? 'var(--green)' : b.healthScore >= 45 ? 'var(--gold)' : 'var(--red)';
+  const healthBg = b.healthScore >= 70 ? 'var(--green-bg)' : b.healthScore >= 45 ? 'var(--gold-bg)' : 'var(--red-bg)';
+  const healthBorder = b.healthScore >= 70 ? 'var(--green-border)' : b.healthScore >= 45 ? 'var(--gold-border)' : 'var(--red-border)';
 
   return (
-    <div style={{ background: 'var(--bg-base)', position: 'relative' }}>
-      {/* subtle bg paths */}
-      <div className="opacity-[0.04] pointer-events-none fixed inset-0 z-0">
-        <BackgroundPaths />
-      </div>
+    <div style={{ background: '#FBFBFA', minHeight: '100vh', position: 'relative' }}>
+      <div className="ambient-layer" aria-hidden />
 
       {hero}
 
-      {/* ── SplineScene Hero Card ── */}
-      <div className="px-6 md:px-10 pt-6 max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative overflow-hidden"
-          style={{ background: '#050505', border: '1px solid #1a1a1a', borderRadius: 6, height: 380 }}
-        >
-          <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgba(69,128,245,0.12)" />
-          <div className="flex h-full">
-            <div className="flex-1 p-8 relative z-10 flex flex-col justify-center">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-5 text-[10px] font-bold uppercase tracking-widest"
-                style={{ background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.22)', color: '#06B6D4', borderRadius: 4, fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-                <Zap size={9} /> Live Platform
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tighter leading-none mb-4 uppercase"
-                style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-                <WaveText text="SBA 7(a)" />
-                <br />
-                <WaveText text="Intelligence" />
-              </h2>
-              <p className="text-sm leading-relaxed max-w-xs" style={{ color: '#666' }}>
-                AI-powered underwriting. From borrower intake to credit memo in under 30 minutes.
-              </p>
-              <div className="flex gap-3 mt-6">
-                <Link href="/underwriting"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 font-bold text-sm transition-transform hover:scale-[1.02] active:scale-[0.97]"
-                  style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', color: '#fff', borderRadius: 4, textTransform: 'uppercase', letterSpacing: '0.06em', fontFamily: 'Aspekta, system-ui, sans-serif' }}>
-                  Start Analysis <ArrowRight size={13} />
-                </Link>
-              </div>
-            </div>
-            <div className="flex-1 relative hidden md:block">
-              <SplineScene
-                scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                className="w-full h-full"
-              />
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      {/* ── SECTION 3: Live Dashboard Data ── */}
-      <div className="px-6 md:px-10 py-10 max-w-6xl mx-auto space-y-5">
+      {/* Content sections */}
+      <div style={{ padding: '0 2.5rem 5rem', maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         {/* Section divider */}
-        <div className="flex items-center gap-4 mb-2">
-          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
-          <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1"
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-tertiary)', borderRadius: 4 }}>
-            <WaveText text="Live Borrower Data" />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1.25rem',
+            marginBottom: '2.5rem',
+          }}
+        >
+          <div style={{ flex: 1, height: 1, background: '#EAEAEA' }} />
+          <span
+            style={{
+              fontSize: '0.65rem',
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              color: '#AEABA4',
+              fontFamily: 'var(--font-body)',
+            }}
+          >
+            Live Borrower Data
           </span>
-          <div className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+          <div style={{ flex: 1, height: 1, background: '#EAEAEA' }} />
         </div>
 
         {/* KPI strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-3"
-        >
-          {[
-            { label: 'Borrower Revenue', value: formatCompact(b.business.annual_revenue), sub: 'Annual' },
-            { label: 'Net Income', value: formatCompact(b.business.net_income), sub: `${b.netMargin.toFixed(1)}% margin` },
-            { label: 'Est. Business Value', value: formatCompact(b.estimatedValuation), sub: 'Blended multiple' },
-            { label: 'D/E Ratio', value: deRatio > 0 ? `${deRatio.toFixed(1)}×` : 'N/A', sub: deRatio > 3 ? 'Elevated' : 'Healthy' },
-          ].map((m, i) => (
-            <motion.div
-              key={m.label}
-              initial={{ opacity: 0, y: 16, filter: 'blur(5px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.07, duration: 0.55, ease: [0.22,1,0.36,1] }}
-              className="card-bezel"
-            >
-              <div className="card relative overflow-hidden">
-                <Spotlight size={200} fill="rgba(69,128,245,0.06)" />
-                <div className="text-[9px] font-bold uppercase tracking-[0.14em] mb-2" style={{ color: 'var(--text-tertiary)' }}>{m.label}</div>
-                <div className="text-2xl font-extrabold font-mono" style={{ color: 'var(--text-primary)' }}>{m.value}</div>
-                {m.sub && <div className="text-[11px] mt-1" style={{ color: 'var(--text-tertiary)' }}>{m.sub}</div>}
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Active borrower card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.22,1,0.36,1] }}
-          className="card-bezel"
-        >
-        <div className="card relative overflow-hidden" style={{ padding: '1.5rem' }}>
-          <div className="absolute top-0 right-0 w-64 h-64 pointer-events-none opacity-5"
-            style={{ background: `radial-gradient(circle, ${scoreColor} 0%, transparent 70%)` }} />
-
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-widest mb-1.5" style={{ color: 'var(--text-tertiary)' }}>
-                Active SBA 7(a) Application
-              </div>
-              <div className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{b.business.business_name}</div>
-              <div className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-                {b.business.industry || 'Industry not specified'} · {b.business.employees} employees
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold"
-                style={{ background: `${scoreColor}14`, border: `1px solid ${scoreColor}33`, color: scoreColor }}>
-                {b.healthLabel} · {b.healthScore}/100
-              </div>
-              <div className="text-[10px] mt-1.5" style={{ color: 'var(--text-tertiary)' }}>SBA Financial Health Score</div>
-              <div className="mt-2 w-40 h-1.5 rounded-full ml-auto" style={{ background: 'var(--bg-elevated)' }}>
-                <div className="h-full rounded-full transition-all duration-1000"
-                  style={{ width: `${b.healthScore}%`, background: scoreColor }} />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <RevealBlock>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: 0,
+              border: '1px solid #EAEAEA',
+              borderRadius: 12,
+              background: '#FFFFFF',
+              marginBottom: '1.5rem',
+              overflow: 'hidden',
+            }}
+          >
             {[
-              { label: 'Annual Revenue', value: formatCurrency(b.business.annual_revenue) },
-              { label: 'Net Income', value: formatCurrency(b.business.net_income) },
-              { label: 'EBIT', value: formatCurrency(b.business.ebit) },
-              { label: 'Total Equity', value: formatCurrency(equity) },
-            ].map(row => (
-              <div key={row.label}>
-                <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--text-tertiary)' }}>{row.label}</div>
-                <div className="text-lg font-bold font-mono" style={{ color: 'var(--text-primary)' }}>{row.value}</div>
+              { label: 'Borrower Revenue', value: formatCompact(b.business.annual_revenue), sub: 'Annual' },
+              { label: 'Net Income', value: formatCompact(b.business.net_income), sub: `${b.netMargin.toFixed(1)}% margin` },
+              { label: 'Est. Business Value', value: formatCompact(b.estimatedValuation), sub: 'Blended multiple' },
+              { label: 'D/E Ratio', value: deRatio > 0 ? `${deRatio.toFixed(1)}×` : 'N/A', sub: deRatio > 3 ? 'Elevated' : 'Healthy' },
+            ].map((m, i) => (
+              <div
+                key={m.label}
+                style={{
+                  padding: '1.5rem',
+                  borderRight: i < 3 ? '1px solid #EAEAEA' : 'none',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 500,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    color: '#AEABA4',
+                    marginBottom: '0.5rem',
+                    fontFamily: 'var(--font-body)',
+                  }}
+                >
+                  {m.label}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '1.5rem',
+                    fontWeight: 600,
+                    color: '#111111',
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {m.value}
+                </div>
+                {m.sub && (
+                  <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: '#AEABA4', fontFamily: 'var(--font-body)' }}>
+                    {m.sub}
+                  </div>
+                )}
               </div>
             ))}
           </div>
-        </div>
-        </motion.div>
+        </RevealBlock>
 
-        {/* Risk flags */}
-        {redFlags.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="rounded p-6"
-            style={{ background: 'rgba(255,68,68,0.04)', border: '1px solid rgba(255,68,68,0.15)' }}
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <AlertTriangle size={14} style={{ color: '#FF4444' }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: '#FF4444' }}>
-                {redFlags.length} Underwriting Risk{redFlags.length > 1 ? 's' : ''} Detected
-              </span>
+        {/* Active borrower card */}
+        <RevealBlock delay={60}>
+          <div className="card" style={{ marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+              <div>
+                <div
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 500,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    color: '#AEABA4',
+                    marginBottom: '0.5rem',
+                    fontFamily: 'var(--font-body)',
+                  }}
+                >
+                  Active SBA 7(a) Application
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '1.5rem',
+                    fontWeight: 400,
+                    color: '#111111',
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {b.business.business_name}
+                </div>
+                <div style={{ fontSize: '0.875rem', color: '#787774', marginTop: '0.25rem', fontFamily: 'var(--font-body)' }}>
+                  {b.business.industry || 'Industry not specified'} · {b.business.employees} employees
+                </div>
+              </div>
+
+              <div style={{ textAlign: 'right' }}>
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.375rem',
+                    padding: '0.3rem 0.875rem',
+                    borderRadius: 9999,
+                    fontSize: '0.8rem',
+                    fontWeight: 500,
+                    background: healthBg,
+                    border: `1px solid ${healthBorder}`,
+                    color: healthColor,
+                    fontFamily: 'var(--font-body)',
+                  }}
+                >
+                  {b.healthLabel} · {b.healthScore}/100
+                </span>
+                <div style={{ fontSize: '0.65rem', color: '#AEABA4', marginTop: '0.5rem', fontFamily: 'var(--font-body)' }}>
+                  SBA Financial Health Score
+                </div>
+                <div
+                  style={{
+                    marginTop: '0.5rem',
+                    width: 140,
+                    height: 3,
+                    background: '#EAEAEA',
+                    borderRadius: 9999,
+                    marginLeft: 'auto',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      height: '100%',
+                      borderRadius: 9999,
+                      width: `${b.healthScore}%`,
+                      background: healthColor,
+                      transition: 'width 1s cubic-bezier(0.16,1,0.3,1)',
+                    }}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="space-y-3">
-              {redFlags.map((flag, i) => (
-                <div key={i} className="flex gap-3 items-start p-3 rounded-xl" style={{ background: 'rgba(0,0,0,0.2)' }}>
-                  <span className={`badge ${flag.severity === 'critical' ? 'badge-red' : flag.severity === 'warning' ? 'badge-yellow' : 'badge-muted'} flex-shrink-0 mt-0.5`}>
-                    {flag.severity}
-                  </span>
-                  <div>
-                    <div className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{flag.title}</div>
-                    <div className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>{flag.detail}</div>
-                    <div className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{flag.action}</div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: 0,
+                borderTop: '1px solid #EAEAEA',
+                paddingTop: '1.25rem',
+              }}
+            >
+              {[
+                { label: 'Annual Revenue', value: formatCurrency(b.business.annual_revenue) },
+                { label: 'Net Income', value: formatCurrency(b.business.net_income) },
+                { label: 'EBIT', value: formatCurrency(b.business.ebit) },
+                { label: 'Total Equity', value: formatCurrency(equity) },
+              ].map((row, i) => (
+                <div
+                  key={row.label}
+                  style={{
+                    paddingRight: i < 3 ? '1.5rem' : 0,
+                    paddingLeft: i > 0 ? '1.5rem' : 0,
+                    borderRight: i < 3 ? '1px solid #EAEAEA' : 'none',
+                  }}
+                >
+                  <div style={{ fontSize: '0.65rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#AEABA4', marginBottom: '0.375rem', fontFamily: 'var(--font-body)' }}>
+                    {row.label}
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', fontWeight: 600, color: '#111111' }}>
+                    {row.value}
                   </div>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
+        </RevealBlock>
+
+        {/* Risk flags */}
+        {redFlags.length > 0 && (
+          <RevealBlock delay={80}>
+            <div
+              style={{
+                background: '#FDEBEC',
+                border: '1px solid #F0BFBF',
+                borderRadius: 12,
+                padding: '1.5rem',
+                marginBottom: '1.5rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', marginBottom: '1.25rem' }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9F2F2D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                  <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 500,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    color: '#9F2F2D',
+                    fontFamily: 'var(--font-body)',
+                  }}
+                >
+                  {redFlags.length} Underwriting Risk{redFlags.length > 1 ? 's' : ''} Detected
+                </span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {redFlags.map((flag, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: 'flex',
+                      gap: '0.875rem',
+                      alignItems: 'flex-start',
+                      background: 'rgba(255,255,255,0.6)',
+                      padding: '0.875rem 1rem',
+                      borderRadius: 8,
+                      border: '1px solid #F0BFBF',
+                    }}
+                  >
+                    <span className={`badge ${flag.severity === 'critical' ? 'badge-red' : flag.severity === 'warning' ? 'badge-yellow' : 'badge-muted'}`} style={{ flexShrink: 0, marginTop: 2 }}>
+                      {flag.severity}
+                    </span>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#111111', fontFamily: 'var(--font-body)' }}>{flag.title}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#787774', marginTop: '0.2rem', fontFamily: 'var(--font-body)' }}>{flag.detail}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#AEABA4', marginTop: '0.15rem', fontFamily: 'var(--font-body)' }}>{flag.action}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </RevealBlock>
         )}
 
-        {/* Workflow — Asymmetric Bento */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
-          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <div className="eyebrow mb-1.5">Loan Officer Workflow</div>
-              <div className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+        {/* Workflow — Bento */}
+        <RevealBlock delay={100}>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <div
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontSize: '1.25rem',
+                  fontWeight: 400,
+                  color: '#111111',
+                  letterSpacing: '-0.02em',
+                  marginBottom: '0.25rem',
+                }}
+              >
+                Loan Officer Workflow
+              </div>
+              <div style={{ fontSize: '0.825rem', color: '#787774', fontFamily: 'var(--font-body)' }}>
                 Complete a full SBA 7(a) analysis in under 30 minutes
               </div>
             </div>
-          </div>
 
-          {/* Asymmetric bento: [wide] [narrow] / [narrow] [narrow] [narrow] / [wide] */}
-          <div
-            className="grid gap-2.5"
-            style={{
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridTemplateRows: 'auto auto',
-            }}
-          >
-            {workflowItems.map((item, i) => {
-              const Icon = item.icon;
-              const isWide = i === 0 || i === 5;
-              return (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: '0.75rem',
+              }}
+            >
+              {workflowItems.map((item, i) => (
                 <motion.div
                   key={item.href}
                   className="workflow-card"
-                  initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-                  whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{
-                    delay: i * 0.06,
-                    duration: 0.5,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  style={isWide ? { gridColumn: 'span 2' } : {}}
+                  transition={{ delay: i * 0.05, duration: 0.4, ease: [0.16,1,0.3,1] }}
+                  style={i === 0 || i === 5 ? { gridColumn: 'span 2' } : {}}
                 >
-                  <Link href={item.href} className="block h-full" style={{ textDecoration: 'none' }}>
-                    <div className="workflow-card-inner group flex items-center gap-3.5">
-                      {/* Icon shell — outer ring */}
-                      <div
-                        className="flex-shrink-0 rounded-xl flex items-center justify-center"
+                  <Link href={item.href} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+                    <div className="workflow-card-inner" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <span
                         style={{
-                          width: 40,
-                          height: 40,
-                          background: `${item.color}10`,
-                          border: `1px solid ${item.color}22`,
-                          boxShadow: `inset 0 1px 0 ${item.color}18`,
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.65rem',
+                          fontWeight: 600,
+                          color: '#AEABA4',
+                          flexShrink: 0,
+                          width: 28,
                         }}
                       >
-                        <Icon size={16} strokeWidth={1.75} style={{ color: item.color }} />
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span
-                            className="text-[9px] font-bold rounded-full px-1.5 py-0.5 flex-shrink-0"
-                            style={{
-                              background: `${item.color}12`,
-                              color: item.color,
-                              border: `1px solid ${item.color}22`,
-                            }}
-                          >
-                            {item.step}
-                          </span>
-                          <span
-                            className="text-sm font-semibold truncate"
-                            style={{ color: 'var(--text-primary)' }}
-                          >
+                        {item.step}
+                      </span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+                          <span style={{ fontSize: '0.875rem', fontWeight: 500, color: '#111111', fontFamily: 'var(--font-body)' }}>
                             {item.label}
                           </span>
+                          {item.tag && (
+                            <span
+                              className="badge badge-accent"
+                              style={{ fontSize: '0.55rem', padding: '0.1rem 0.4rem' }}
+                            >
+                              {item.tag}
+                            </span>
+                          )}
                         </div>
-                        <div
-                          className="text-[11px] truncate"
-                          style={{ color: 'var(--text-tertiary)' }}
-                        >
+                        <div style={{ fontSize: '0.75rem', color: '#AEABA4', fontFamily: 'var(--font-body)' }}>
                           {item.sub}
                         </div>
                       </div>
-
-                      {/* Button-in-button trailing icon */}
-                      <div
-                        className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
-                        style={{
-                          background: 'var(--bg-elevated)',
-                          border: '1px solid var(--border)',
-                          transitionTimingFunction: 'cubic-bezier(0.32,0.72,0,1)',
-                        }}
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#AEABA4"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        style={{ flexShrink: 0 }}
                       >
-                        <ArrowRight
-                          size={11}
-                          className="transition-transform duration-300 group-hover:translate-x-0.5"
-                          style={{
-                            color: 'var(--text-tertiary)',
-                            transitionTimingFunction: 'cubic-bezier(0.32,0.72,0,1)',
-                          }}
-                        />
-                      </div>
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                        <polyline points="12 5 19 12 12 19" />
+                      </svg>
                     </div>
                   </Link>
                 </motion.div>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </RevealBlock>
 
         {/* Unit economics */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="rounded p-6"
-          style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
-        >
-          <div className="text-xs font-bold uppercase tracking-widest mb-5" style={{ color: 'var(--text-tertiary)' }}>Unit Economics at a Glance</div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { label: 'Cost / Application (Manual)', value: '$200–$600', note: 'At $100K analyst salary, 200 loans/yr' },
-              { label: 'Time Saved / Application', value: '~5 hours', note: 'From 4–8 hrs → under 30 min' },
-              { label: 'Annual Analyst Cost (PLP)', value: '$40–120K', note: '200 loans × $200–600/loan' },
-              { label: 'Platform ACV', value: '$24–60K', note: '$2,000–$5,000/month per institution' },
-            ].map(s => (
-              <div key={s.label} className="p-4 rounded-xl" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)' }}>
-                <div className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--text-tertiary)' }}>{s.label}</div>
-                <div className="text-base font-extrabold font-mono mb-1" style={{ background: 'linear-gradient(to right, #06B6D4, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>{s.value}</div>
-                <div className="text-[10px]" style={{ color: 'var(--text-tertiary)' }}>{s.note}</div>
-              </div>
-            ))}
+        <RevealBlock delay={120}>
+          <div className="card" style={{ marginBottom: '1.5rem' }}>
+            <div
+              style={{
+                fontSize: '0.65rem',
+                fontWeight: 500,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                color: '#AEABA4',
+                marginBottom: '1.5rem',
+                fontFamily: 'var(--font-body)',
+              }}
+            >
+              Unit Economics at a Glance
+            </div>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, 1fr)',
+                gap: 0,
+              }}
+            >
+              {[
+                { label: 'Cost / Application (Manual)', value: '$200–$600', note: 'At $100K analyst salary, 200 loans/yr' },
+                { label: 'Time Saved / Application', value: '~5 hours', note: 'From 4–8 hrs → under 30 min' },
+                { label: 'Annual Analyst Cost (PLP)', value: '$40–120K', note: '200 loans × $200–600/loan' },
+                { label: 'Platform ACV', value: '$24–60K', note: '$2,000–$5,000/month per institution' },
+              ].map((s, i) => (
+                <div
+                  key={s.label}
+                  style={{
+                    paddingRight: i < 3 ? '1.5rem' : 0,
+                    paddingLeft: i > 0 ? '1.5rem' : 0,
+                    borderRight: i < 3 ? '1px solid #EAEAEA' : 'none',
+                  }}
+                >
+                  <div style={{ fontSize: '0.65rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#AEABA4', marginBottom: '0.5rem', fontFamily: 'var(--font-body)' }}>
+                    {s.label}
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.125rem', fontWeight: 600, color: '#111111', marginBottom: '0.25rem' }}>
+                    {s.value}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: '#AEABA4', lineHeight: 1.5, fontFamily: 'var(--font-body)' }}>
+                    {s.note}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </motion.div>
+        </RevealBlock>
 
         {/* Recent AI analysis */}
         {recentAdvice && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="rounded p-6"
-            style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
-                <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--text-tertiary)' }}>Recent AI Analysis</span>
+          <RevealBlock delay={140}>
+            <div className="card" style={{ marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      background: '#346538',
+                      animation: 'floatY 2s ease-in-out infinite',
+                    }}
+                  />
+                  <span style={{ fontSize: '0.65rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#AEABA4', fontFamily: 'var(--font-body)' }}>
+                    Recent AI Analysis
+                  </span>
+                </div>
+                <Link
+                  href="/advisor"
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 500,
+                    color: '#787774',
+                    textDecoration: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    fontFamily: 'var(--font-body)',
+                    transition: 'color 0.15s ease',
+                  }}
+                >
+                  View conversation
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </Link>
               </div>
-              <Link href="/advisor" className="text-xs font-semibold flex items-center gap-1 transition-opacity hover:opacity-70"
-                style={{ color: 'var(--accent)' }}>
-                View conversation <ArrowRight size={11} />
-              </Link>
+              <p
+                style={{
+                  fontSize: '0.875rem',
+                  lineHeight: 1.7,
+                  color: '#787774',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: 'vertical' as const,
+                  fontFamily: 'var(--font-body)',
+                }}
+              >
+                {recentAdvice}
+              </p>
+              <div
+                style={{
+                  marginTop: '1rem',
+                  padding: '0.625rem 0.875rem',
+                  borderRadius: 8,
+                  background: '#F7F6F3',
+                  fontSize: '0.7rem',
+                  color: '#AEABA4',
+                  fontFamily: 'var(--font-body)',
+                }}
+              >
+                For loan officer review only. All credit decisions remain with the loan officer. Not a credit opinion.
+              </div>
             </div>
-            <p className="text-sm leading-relaxed line-clamp-4" style={{ color: 'var(--text-secondary)' }}>
-              {recentAdvice}
-            </p>
-            <div className="mt-4 px-4 py-2.5 rounded-xl text-xs" style={{ background: 'var(--bg-elevated)', color: 'var(--text-tertiary)' }}>
-              For loan officer review only. All credit decisions remain with the loan officer. Not a credit opinion.
-            </div>
-          </motion.div>
+          </RevealBlock>
         )}
-
-        <div className="pb-8" />
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Search } from 'lucide-react';
 
 const PAGE_META: Record<string, { section: string; title: string }> = {
   '/dashboard':     { section: 'SBA Lender',    title: 'Underwriting Pipeline' },
@@ -24,15 +23,15 @@ export default function AppHeader() {
   return (
     <header
       style={{
-        height: 60,
+        height: 56,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 1.75rem',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        background: 'rgba(5,5,5,0.92)',
-        backdropFilter: 'blur(28px)',
-        WebkitBackdropFilter: 'blur(28px)',
+        borderBottom: '1px solid #EAEAEA',
+        background: 'rgba(251,251,250,0.92)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         position: 'sticky',
         top: 0,
         zIndex: 10,
@@ -40,44 +39,29 @@ export default function AppHeader() {
       }}
     >
       {/* Left: breadcrumb */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         {meta.section && (
           <span
             style={{
-              fontSize: '0.55rem',
-              fontWeight: 700,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-              color: '#333333',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.3em',
-              fontFamily: 'Aspekta, system-ui, sans-serif',
+              fontSize: '0.75rem',
+              fontWeight: 400,
+              color: '#AEABA4',
+              fontFamily: 'var(--font-body)',
             }}
           >
             {meta.section}
-            <span style={{ opacity: 0.4 }}>/</span>
-            <span
-              style={{
-                background: 'linear-gradient(to right, #06B6D4, #EC4899)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              {meta.title}
-            </span>
           </span>
+        )}
+        {meta.section && (
+          <span style={{ color: '#EAEAEA', fontSize: '0.75rem' }}>/</span>
         )}
         <span
           style={{
-            fontSize: '0.9rem',
-            fontWeight: 900,
-            color: '#ffffff',
-            letterSpacing: '-0.02em',
-            lineHeight: 1.2,
-            textTransform: 'uppercase',
-            fontFamily: 'Aspekta, system-ui, sans-serif',
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: '#111111',
+            fontFamily: 'var(--font-body)',
+            letterSpacing: '-0.01em',
           }}
         >
           {meta.title}
@@ -86,42 +70,42 @@ export default function AppHeader() {
 
       {/* Right: search */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-        <div
-          style={{
-            position: 'relative',
-            padding: '1px',
-            borderRadius: 9999,
-            background: 'rgba(255,255,255,0.06)',
-          }}
-        >
-          <Search
-            size={12}
+        <div style={{ position: 'relative' }}>
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#AEABA4"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             style={{
               position: 'absolute',
-              left: '0.8rem',
+              left: '0.75rem',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: '#555555',
               pointerEvents: 'none',
-              zIndex: 1,
             }}
-          />
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
           <input
             type="text"
             placeholder="Search"
             aria-label="Search"
             style={{
-              width: 188,
-              padding: '0.42rem 1rem 0.42rem 2rem',
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: 9999,
-              color: '#ffffff',
-              fontSize: '0.76rem',
+              width: 180,
+              padding: '0.4rem 0.875rem 0.4rem 2.125rem',
+              background: '#F7F6F3',
+              border: '1px solid #EAEAEA',
+              borderRadius: 8,
+              color: '#111111',
+              fontSize: '0.8rem',
               outline: 'none',
-              backdropFilter: 'blur(8px)',
-              fontFamily: 'Aspekta, system-ui, sans-serif',
-              transition: 'border-color 0.2s ease',
+              fontFamily: 'var(--font-body)',
+              transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
             }}
             className="header-search-input"
           />

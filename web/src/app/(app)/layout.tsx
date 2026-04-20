@@ -7,22 +7,9 @@ export const dynamic = 'force-dynamic';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative', zIndex: 1, background: '#050505' }}>
-      {/* Purple ambient glow */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'fixed',
-          top: '-20%',
-          left: '40%',
-          width: '60vw',
-          height: '60vw',
-          background: 'radial-gradient(ellipse, rgba(124,58,237,0.05) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-          animation: 'drift 14s ease-in-out infinite alternate',
-        }}
-      />
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', position: 'relative', zIndex: 1, background: '#FBFBFA' }}>
+      {/* Ambient layer */}
+      <div className="ambient-layer" aria-hidden="true" />
 
       {/* Sidebar – desktop only */}
       <div className="hidden md:flex">
@@ -48,8 +35,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       <ScrollReveal />
 
-      {/* Grain overlay */}
-      <div className="grain-overlay" aria-hidden="true" />
     </div>
   );
 }
